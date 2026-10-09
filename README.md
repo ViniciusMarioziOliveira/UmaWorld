@@ -1,174 +1,181 @@
-# UmaWorld
+<p align="center">
+  <img src="docs/img/capa.webp" width="100%" alt="Capa do UmaWorld: Special Week, Forever Young, Marche Lorraine, Silence Suzuka e Tokai Teio em frente a uma pista de corrida">
+</p>
 
-Jogo web **single player** de coleção e treino, inspirado em Uma Musume. Você anda pela Academia Tracen com a sua própria corredora, entra nos prédios para recrutar, treinar e cuidar da fazenda, e acompanha o servidor inteiro por um **Chat Global em tempo real**.
+<p align="center">
+  <b>Um mundo de Uma Musume para explorar, recrutar e treinar, direto no navegador.</b><br>
+  Jogo web feito por fã, com mundo aberto, gacha, treino e um Chat Global em tempo real.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.13">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/SQLAlchemy-2-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white" alt="SQLAlchemy 2">
+  <img src="https://img.shields.io/badge/Pydantic-E92063?style=for-the-badge&logo=pydantic&logoColor=white" alt="Pydantic">
+  <img src="https://img.shields.io/badge/WebSocket-tempo%20real-1d2547?style=for-the-badge" alt="WebSocket">
+  <br>
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
+  <br>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&logo=css&logoColor=white" alt="CSS">
+  <img src="https://img.shields.io/badge/SVG-FFB13B?style=for-the-badge&logo=svg&logoColor=black" alt="SVG">
+  <img src="https://img.shields.io/badge/pytest-42%20testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest: 42 testes">
+  <img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render">
+</p>
+
+> [!IMPORTANT]
+> **Projeto de portfólio, sem fins lucrativos.** O UmaWorld é um projeto de fã, feito para estudo e para o meu portfólio. Não tem anúncios, compras nem qualquer tipo de monetização, e não é afiliado nem endossado pela Cygames. *Uma Musume Pretty Derby*, as personagens, os nomes e as artes oficiais pertencem à **Cygames, Inc.** Veja os [créditos](#créditos) no fim da página.
+
+## Sobre o projeto
+
+O UmaWorld é um jogo de coleção e treino inspirado em *Uma Musume Pretty Derby*. Em vez de menus, a tela principal é um **mapa da Academia Tracen** visto de cima. Você anda por ele com a sua própria corredora, uma das personagens que conseguiu no gacha, e entra nos prédios para recrutar, treinar, cuidar da fazenda e cumprir missões.
+
+O jogo é single player, mas o servidor é um só. Os outros jogadores online passeiam pela Praça com as corredoras deles, e tudo o que acontece de importante aparece para todo mundo no **Chat Global**, ao vivo:
 
 ```
-Luna conseguiu [5★ Mejiro McQueen] com 78 pity.
-Mario alcançou Rank Ouro.
-O servidor chegou a 10.000 pulls!
+Luna conseguiu [5★ Satono Diamond] com 90 pity.
+Akemi alcançou Rank Ouro.
+O servidor chegou a 500 pulls!
 ```
 
-> Projeto de portfólio, feito por fã e sem fins lucrativos. Uma Musume Pretty Derby © Cygames, Inc.
-> Dados e artes oficiais obtidos pela API pública do [umapyoi.net](https://umapyoi.net).
+Todo sorteio, custo e recompensa é calculado no servidor. Por isso nenhum "conseguiu 5★" do chat pode ser inventado pelo console do navegador.
 
-## O mundo
+<p align="center">
+  <img src="docs/img/mundo.webp" width="100%" alt="A Praça Central com a fonte, cinco jogadores online passeando com as suas corredoras, o minimapa e o Chat Global anunciando 5★ e subidas de rank">
+</p>
 
-A tela principal é um mapa em visão de cima. A câmera segue a sua corredora, que é uma das personagens que você conseguiu no gacha (dá pra trocar a qualquer momento).
+## O que tem no jogo
 
+### Um mundo para explorar
+
+- **Mapa grande:** são 3600 × 3360 px de academia, com prédios, lago, plantação, jardins e um minimapa clicável.
+- **Controles:** a corredora anda com WASD ou pelas setas, corre com Shift e interage com E. Também dá para clicar em qualquer ponto do mapa: ela encontra o caminho sozinha, desviando dos obstáculos (A\*).
+- **Uma Musumes pela Academia:** 15 personagens ficam espalhadas pelo mapa, cada uma no seu canto. Quando você chega perto, elas viram, dão um pulinho e puxam conversa. A Gold Ship pesca no lago, a Special Week e a Oguri Cap ficam no refeitório, e a Fukukitaru lê a sorte no Templo.
+- **NPCs da Academia:** a Tazuna cuida do quadro de avisos, a repórter Etsuko anuncia as 5★ do servidor e a diretora Yayoi dá conselhos.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/img/umas.webp" alt="A corredora do jogador ao lado da Gold Ship, que pesca no lago e diz: estou pescando um tubarão, ou um submarino, o que morder primeiro"></td>
+    <td width="50%"><img src="docs/img/pista.webp" alt="Vista do Mirante: a câmera se afasta e mostra a pista de corrida com Umas correndo e um telão anunciando a Dupla Estelar"></td>
+  </tr>
+  <tr>
+    <td align="center">Chegue perto e aperte E: cada Uma tem as suas falas.</td>
+    <td align="center">No Mirante, a câmera se afasta e mostra a Pista de Corrida.</td>
+  </tr>
+</table>
+
+Fora da cerca fica a **Pista de Corrida**, com grama, areia, arquibancada, portão de largada e um telão. Seis Umas correm voltas e se ultrapassam o tempo todo.
+
+### Templo da Sorte (gacha)
+
+<p align="center">
+  <img src="docs/img/revelacao.webp" width="720" alt="Animação de um recrutamento 10x: o bilhete brilha em cromado holográfico, é rasgado, as cartas aparecem e a Marche Lorraine 5★ sai da carta">
+</p>
+
+- **Três banners:** o **Holofote** é limitado e troca toda semana. A **Dupla Estelar** é limitada e tem duas 5★ em destaque, a Forever Young e a Marche Lorraine. A **Corrida das Lendas** é o banner permanente.
+- **Regras de gacha de verdade:**
+  - pity de 90, com pity suave a partir do 74;
+  - 4★ garantida a cada 10 pulls;
+  - regra 50/50 com garantia, compartilhada entre os dois banners limitados.
+- **De 1 a 10 pulls por vez:** os tickets são gastos primeiro, e o que faltar sai em carats.
+- **A revelação:** você rasga um bilhete, e a luz do picote já mostra a maior raridade: azul, roxa ou cromado holográfico na 5★. Depois as cartas viram uma a uma, e a arte da 5★ sai da própria carta.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/img/gacha.webp" alt="Tela do banner Dupla Estelar com Forever Young e Marche Lorraine, barra de pity e botões de pull 1x e 10x"></td>
+    <td width="50%"><img src="docs/img/recrutamento-10x.webp" alt="Resultado de um recrutamento 10x: a Forever Young 5★, nova na coleção, e nove 3★"></td>
+  </tr>
+  <tr>
+    <td align="center">O banner Dupla Estelar, com o pity e a garantia.</td>
+    <td align="center">O resultado de um 10x: cópias viram despertar e, depois, fragmentos.</td>
+  </tr>
+</table>
+
+### Treino, coleção e progresso
+
+<table>
+  <tr>
+    <td width="33%"><img src="docs/img/treino.webp" alt="Centro de Treinamento com a Marche Lorraine nível 68, poder, equipamento e manuais de treino"></td>
+    <td width="33%"><img src="docs/img/casa.webp" alt="Sua Casa: perfil com título Lenda da Pista, rank Ouro e três favoritas"></td>
+    <td width="33%"><img src="docs/img/fazenda.webp" alt="Fazenda nível 5 com recursos prontos para coletar e três ajudantes"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Centro de Treinamento</b><br>Nível, atributos, habilidades, ascensão, equipamento e a ficha oficial de cada Uma.</td>
+    <td align="center"><b>Sua Casa</b><br>Título, moldura, favoritas, estatísticas, conquistas e a coleção completa.</td>
+    <td align="center"><b>Fazenda</b><br>Produz recursos enquanto você está fora. As ajudantes aumentam a produção.</td>
+  </tr>
+</table>
+
+Também tem **Missões** diárias, semanais e conquistas, uma **Loja** com limites por período e cosméticos, o **Armazém** com tudo o que você tem e o **Hall da Fama**, com rankings por nível, poder, pulls, coleção e 5★. Ao todo são **36 Umas** para colecionar.
+
+### Funciona no celular
+
+<p align="center">
+  <img src="docs/img/celular.webp" width="600" alt="O UmaWorld no celular: o mundo com o minimapa fechado e a tela do Templo da Sorte">
+</p>
+
+No celular, o menu vai para a parte de baixo da tela, o minimapa começa fechado e a corredora anda com um toque no mapa.
+
+## Tecnologias
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=py,fastapi,postgres,supabase,sqlite,js,html,css,svg" alt="Python, FastAPI, PostgreSQL, Supabase, SQLite, JavaScript, HTML, CSS e SVG">
+</p>
+
+| Parte | Tecnologia | Para quê |
+|---|---|---|
+| Servidor | **Python 3.13**, **FastAPI**, **Pydantic**, Uvicorn | API REST com todas as regras do jogo e validação dos dados |
+| Tempo real | **WebSocket** (Starlette) | Chat Global e lista de quem está online |
+| Banco de dados | **SQLAlchemy 2** com **PostgreSQL** no **Supabase** | Contas, coleção, pity, missões e histórico. Sem configuração, usa **SQLite** local |
+| Login | **bcrypt** e **JWT** | Apelido e senha, sem e-mail |
+| Frontend | **HTML**, **CSS** e **JavaScript** puro (ES modules) | Interface sem framework e sem etapa de build |
+| Mundo | **SVG** desenhado em código e um motor próprio | Movimento, colisão, A\*, câmera com zoom e o andar das corredoras |
+| Testes | **pytest** | 42 testes de gacha, economia, WebSocket, banco e desempenho |
+| Hospedagem | **Render** (`render.yaml`) | Deploy pronto, com o banco no Supabase |
+
+## Por baixo do capô
+
+```mermaid
+flowchart LR
+    N["Navegador<br/>HTML + CSS + JS"] -- "HTTP /api" --> S["FastAPI<br/>regras do jogo"]
+    S -- "SQLAlchemy" --> D[("PostgreSQL<br/>Supabase")]
+    S -- "WebSocket /ws<br/>só depois do commit" --> N
 ```
-  [Templo]  [Loja] [Refeitório]   [ Academia Tracen ]   [Hall da Fama]   [Treino]
-     |________|_________|_________________|________________|_______________|
-   lago          mesas          [   Praça Central   ] ──── [Missões]    pista de treino
-     |                                    |                       [Dormitório]
-  [Fazenda]     [Casa] ─── jardim central ─┼─── [Armazém]   [Clube] [Jardim do Chá]
-  ═══════════════════════ calçadão ══ [Mirante] ══ calçadão ════════════════════
-  ~~~~~~~~ cerca: daqui para baixo é a Pista de Corrida, só para olhar ~~~~~~~~
-```
 
-- **Tamanho:** 3600×3360 px. Um **minimapa** no canto mostra tudo, e clicar nele leva a corredora até o ponto. No celular ele começa fechado.
-- **Controles:** WASD ou setas para andar, Shift para correr e E para entrar ou falar. Também dá pra clicar ou tocar em qualquer ponto: a corredora acha o caminho sozinha (A* com desvio de obstáculos).
-- **Entrar nos prédios:** clique no prédio ou passe pela porta. Ao voltar, a corredora reaparece na porta de onde saiu.
-- **Velocidade:** o atributo Velocidade da corredora deixa a corrida no mapa um pouco mais rápida.
-- **NPCs da Academia:**
-  - a **Tazuna** abre o quadro de avisos;
-  - a repórter **Etsuko** anuncia as 5★ do servidor em balões de fala;
-  - a diretora **Yayoi** dá conselhos.
-- **Umas pela Academia:** 15 personagens espalhadas pelo mapa, cada uma no seu canto:
-  - a Special Week e a Oguri Cap no refeitório;
-  - a Gold Ship pescando no lago;
-  - a Fukukitaru lendo a sorte no Templo;
-  - a Tokai Teio e a Agnes Tachyon na pista de treino, entre outras.
-  
-  Quando você chega perto, elas viram, dão um pulinho, mostram um ícone e puxam conversa. Com E, cada uma conta as suas falas. A Forever Young e a Marche Lorraine ficam na porta do Templo e levam você até o banner delas.
-- **Pista de Corrida:** fica fora da cerca, grande o bastante para ser uma pista de verdade. Tem grama por fora e areia por dentro, arquibancada, poste de chegada, portão de largada e um telão anunciando a Dupla Estelar. Seis Umas correm voltas e se ultrapassam. No **Mirante**, no fim do eixo central, a câmera se afasta e desce para mostrar a pista inteira.
-- **Outros jogadores online** aparecem passeando pela Praça com as corredoras deles. Se alguém tira uma 5★, um balão aparece sobre a cabeça dessa pessoa.
+- **O servidor decide tudo:** sorteio, pity, custos e recompensas são calculados no backend, e o navegador só mostra o resultado.
+- **O chat não mente:** cada anúncio é gravado na mesma transação da ação e só é enviado pelo WebSocket depois do commit. Se a ação falhar, ninguém vê um "conseguiu 5★" que não aconteceu.
+- **Sem gasto duplo:** toda ação que gasta recursos começa travando a linha do jogador no banco. Dois cliques rápidos no 10x rodam um depois do outro, e o saldo nunca é gasto duas vezes.
+- **Poucas idas ao banco:** em produção, o servidor (Render, na Virgínia) fica longe do banco (Supabase, em São Paulo), e cada consulta custa uns 120 ms. Por isso cada ação lê o que precisa de uma vez. Um 10x faz umas 17 consultas, e um teste falha se alguma tela voltar a fazer uma consulta por item.
+- **O mundo roda no navegador:** os cenários são SVG gerados em código. As corredoras são imagens paradas, e o andar é procedural, com quique no ritmo da velocidade, inclinação e troca de peso entre os pés.
+- **As artes ficam no projeto:** os dados oficiais e as imagens vêm da API do [umapyoi.net](https://umapyoi.net). Uma ferramenta baixa tudo uma única vez, já recortado e em WebP, e o jogo nunca chama a API enquanto roda.
 
-## Áreas
+## Como rodar localmente
 
-| Prédio | O que tem |
-|---|---|
-| **Praça Central** (quadro de avisos) | Atalhos, eventos ativos com contagem regressiva, avisos do servidor, jogadores online e estatísticas globais |
-| **Templo da Sorte** (gacha) | Três banners: o Holofote (limitado, troca toda semana), a **Dupla Estelar** (limitado com duas 5★ em destaque, Forever Young e Marche Lorraine) e o permanente. Os dois limitados dividem o mesmo pity e a mesma garantia; na Dupla Estelar, ganhar o 50/50 ou usar a garantia entrega uma das duas, sorteada. Pity de 90 com pity suave a partir do 74, 4★ garantida a cada 10, regra 50/50 e histórico paginado. De 1 a 10 pulls por vez: tickets são gastos primeiro e o resto sai em carats (6 tickets + 600 carats fecham um 10x), e com 2 a 9 tickets aparece um botão para usar todos de uma vez. A revelação começa com um bilhete que você rasga: a luz do picote mostra a maior raridade (azul, roxa ou cromado holográfico na 5★), as cartas viram uma a uma e a arte da 5★ sai da própria carta |
-| **Centro de Treinamento** | Nível com manuais (com prévia), treino de atributos, habilidades, ascensão em 4 estágios, equipamentos e **Ficha** com os dados oficiais (aniversário, altura, dormitório, curiosidades) |
-| **Fazenda** | Produção por tempo, com limite de armazém e coleta. Ajudantes aumentam a eficiência. Dá pra melhorar a fazenda e o armazém |
-| **Armazém** | Personagens, itens, materiais, equipamentos e moedas, com filtros |
-| **Escritório de Missões** | Diárias, semanais e conquistas |
-| **Loja** | Ofertas em moedas, carats e fragmentos, com limites por período, além de cosméticos e personagens específicas |
-| **Sua Casa** | Nível e rank, título, moldura, favoritas, estatísticas, conquistas e coleção (as que faltam aparecem como silhueta) |
-| **Hall da Fama** | Ranking por nível, personagens mais fortes, pulls, coleção e quantidade de 5★ |
-
-## Stack
-
-- **Backend:** Python 3.11+, FastAPI, SQLAlchemy 2, WebSocket nativo do Starlette.
-- **Banco:** PostgreSQL no [Supabase](https://supabase.com), ou SQLite local se nenhum banco for configurado. A troca é feita só pelo `.env`. As tabelas são criadas sozinhas, com RLS ligado. Passo a passo em [GUIA_BANCO_DE_DADOS.md](GUIA_BANCO_DE_DADOS.md).
-- **Autenticação:** apelido e senha, com bcrypt e JWT.
-- **Frontend:** HTML, CSS e JavaScript puro com ES modules. Não tem etapa de build.
-- **Mundo:** SVG desenhado em código (prédios, árvores, lago, pista e plantação) mais um motor próprio com movimento, colisão, A*, câmera com zoom e ordenação de profundidade. A arte das corredoras é uma imagem parada; o andar é procedural (quique no ritmo da velocidade, inclinação, troca de peso entre os pés e virada "de papel"). As NPCs viram para olhar quem chega perto, e as Umas passeiam, fazem ronda e puxam conversa.
-- **Ícones:** [game-icons.net](https://game-icons.net) (CC BY 3.0) e [Phosphor](https://phosphoricons.com) (MIT), num único sprite SVG local.
-
-## Como rodar (Windows / PowerShell)
+Precisa de **Python 3.11 ou mais novo** (o projeto usa o 3.13).
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1        # no Linux/macOS: source .venv/bin/activate
 pip install -r requirements-dev.txt
 uvicorn app.main:app --reload
 ```
 
-Abra **http://127.0.0.1:8000** e crie uma conta. Para ver os outros jogadores na Praça e o Chat Global ao vivo, abra uma segunda janela anônima com outra conta.
+Abra **http://127.0.0.1:8000** e crie uma conta. Sem nenhuma configuração, o jogo usa um banco SQLite local, criado sozinho na primeira vez. Para usar PostgreSQL, copie o `.env.example` para `.env` e preencha o `DATABASE_URL`.
 
-> Se você já tinha um `umaworld.db` da versão anterior, ele é **migrado automaticamente** (coluna nova para a corredora do mundo e ícones antigos do feed convertidos).
-
-### Testes
+Para ver a Praça com outros jogadores e o Chat Global ao vivo, abra uma segunda janela anônima e entre com outra conta.
 
 ```powershell
-pytest
+pytest    # 42 testes; sempre usam um SQLite temporário
 ```
-
-42 testes cobrem gacha (pity, 50/50, a Dupla Estelar com pity compartilhado, cópias, pagamento misto de tickets e carats, pulls em lote), o WebSocket (anúncio de 5★ e presença com a corredora), Fazenda, missões, loja, treino, perfil, ranking, a troca de corredora, a ficha oficial, a migração de um banco da versão 1, a montagem da URL do Supabase, a cópia de jogadores do SQLite, o backup do banco e quantas leituras cada tela faz no banco (para nenhuma voltar a fazer uma consulta por item). Eles sempre usam um SQLite temporário, nunca o banco do `.env`.
-
-## Dados do umapyoi.net (e por que eles ficam em JSON)
-
-O jogo **nunca chama o umapyoi em tempo de execução**. A ferramenta `tools/sync_umapyoi.py` roda uma vez e salva tudo localmente:
-
-```powershell
-python -m tools.sync_umapyoi           # baixa só o que falta
-python -m tools.sync_umapyoi --force   # baixa tudo de novo
-```
-
-- **`app/game/data/umas.json`**: cores oficiais, aniversário, altura, perfil, pontos fortes e fracos e curiosidades das 36 personagens e das 3 NPCs.
-- **`static/img/umas/<id>/`**: as imagens de cada personagem, já recortadas e em WebP:
-  - `icon` (avatar);
-  - `card` (busto);
-  - `sprite` (corpo inteiro pequeno, que anda no mundo);
-  - `full` (corpo inteiro grande).
-
-As artes oficiais ficam no CDN do microCMS, que aceita parâmetros de transformação. A ferramenta pede cada imagem já recortada (`trim=auto`), redimensionada e em WebP. A arte de corpo inteiro cai de **~680 KB** (PNG 1125×1980) para **~16 KB** (WebP 112×320). O conjunto inteiro tem uns 4,6 MB, e o navegador só baixa o que aparece na tela.
-
-> As imagens pertencem à Cygames. Se preferir não versioná-las no Git, adicione `static/img/umas/` ao `.gitignore` e rode o sync no build do deploy.
-
-Os ícones seguem a mesma ideia: `python -m tools.build_icons` monta `static/img/icons.svg` a partir da API do Iconify. Para adicionar um ícone, inclua uma linha no dicionário `ICONS` e rode o script de novo.
-
-## Arquitetura
-
-```
-Navegador ── HTTP /api/* ──► FastAPI (rotas síncronas) ──► SQLAlchemy ──► PostgreSQL (Supabase) ou SQLite
-    ▲                               │
-    └──── WebSocket /ws ◄── Hub ◄───┘  (broadcast só depois do COMMIT)
-```
-
-- **Toda regra roda no servidor.** O sorteio, os custos e as recompensas são calculados no backend. Assim o "conseguiu 5★" do chat não pode ser forjado pelo console.
-- **O feed é transacional.** O evento é gravado na mesma transação da ação, e só é publicado no WebSocket depois do commit (hook `after_commit`).
-- **Não há gasto duplo.** As ações começam com um `UPDATE` na linha do jogador (`locked_user`), então dois cliques simultâneos são executados em sequência.
-- **A presença carrega a corredora.** Cada conexão do WebSocket informa qual personagem anda pelo mundo. Quando alguém troca de corredora, todos recebem a atualização e a sprite muda na Praça.
-- **O mundo roda no navegador.** O servidor não sabe onde cada pessoa está no mapa: é um jogo single player. Os outros jogadores passeiam pela Praça de forma aleatória, calculada em cada navegador.
-- **A Fazenda não roda em loop.** O servidor guarda só a hora da última coleta, e a produção é `taxa × min(tempo, capacidade)`.
-
-### Estrutura
-
-```
-app/
-  main.py, config.py, database.py, models.py, migrate.py, realtime.py, security.py, schemas.py
-  game/
-    catalog.py       # personagens, itens, missões, loja e avisos: edite aqui
-    registry.py      # catálogo em memória + dados oficiais (data/umas.json)
-    data/umas.json   # gerado por tools/sync_umapyoi.py
-    gacha.py, training.py, afk.py, missions.py, shop.py, rewards.py, progression.py, feed.py
-  routers/           # um arquivo por área + ws.py
-static/
-  img/icons.svg      # sprite de ícones (tools/build_icons.py)
-  img/umas/          # artes oficiais otimizadas (tools/sync_umapyoi.py)
-  js/world/          # layout.js (mapa), art.js (SVG), engine.js (movimento, A*, câmera)
-  js/views/          # uma tela por área + world.js
-tools/               # sync_umapyoi.py, build_icons.py, migrar_sqlite.py
-tests/
-```
-
-### Protocolo do WebSocket (`/ws?token=...`)
-
-| Direção | Mensagem |
-|---|---|
-| servidor → cliente | `{"type": "hello", "feed": [...], "online": [{"nickname", "level", "avatar"}], "viewers": n}` |
-| servidor → cliente | `{"type": "feed", "event": {"kind": "five_star", "icon": "star-burst", "nickname": "Luna", "message": "conseguiu [5★ ...] com 78 pity."}}` |
-| servidor → cliente | `{"type": "presence", "online": [...], "viewers": n}` |
-| cliente → servidor | `"ping"` |
-
-## Deploy
-
-O Chat Global e a presença online ficam na memória de **um único processo**, que precisa ficar ligado. Use **Render**, **Railway** ou **Fly.io**. A Vercel aceita WebSocket desde 2026 (em beta), mas espalha as conexões por várias cópias do servidor, e o Chat e a presença precisam de todos os jogadores no mesmo processo.
-
-O caminho pronto é **Render + Supabase**. O `render.yaml` cria o Web Service e pede a URI e a senha do Supabase na criação do Blueprint. O passo a passo completo, com as tabelas, onde fica cada chave e como levar o progresso do SQLite (`python -m tools.migrar_sqlite`), está em **[GUIA_BANCO_DE_DADOS.md](GUIA_BANCO_DE_DADOS.md)**. Detalhes:
-
-- rode **uma instância com um worker** (o `render.yaml` já usa `--workers 1`), porque a presença online fica na memória do processo;
-- use a URI do **Session pooler** do Supabase: a conexão direta é só IPv6, e o Render só conecta por IPv4;
-- o banco fica em **São Paulo**, e o Render não tem São Paulo: cada consulta leva uns 120 ms. O jogo foi ajustado para fazer poucas consultas por ação (um 10x leva uns 2,5 s, abrir a Praça, cerca de 1 s). Os números estão no começo da Parte D do guia;
-- o Python (3.13) vem do `.python-version`, e as bibliotecas têm versões fixas no `requirements.txt`, as mesmas em que os testes passaram;
-- o Supabase gratuito pausa o projeto depois de 7 dias sem uso. Para voltar, é só restaurar pelo painel;
-- para guardar uma cópia do banco, rode `python -m tools.backup_banco`. O arquivo vai para `backups/`, que fica fora do Git.
 
 ## Créditos
 
-- Uma Musume Pretty Derby © Cygames, Inc. Todas as artes e nomes das personagens pertencem à Cygames.
-- Dados e imagens: [umapyoi.net](https://umapyoi.net).
-- Ícones: [game-icons.net](https://game-icons.net) (Lorc, Delapouite e colaboradores, CC BY 3.0) e [Phosphor Icons](https://phosphoricons.com) (MIT).
-- Fontes: Zen Maru Gothic e M PLUS Rounded 1c (Google Fonts, SIL OFL).
+- ***Uma Musume Pretty Derby* © Cygames, Inc.** As personagens, os nomes e as artes oficiais pertencem à Cygames e aparecem aqui só em um projeto de fã, sem fins lucrativos. Se você representa a Cygames e quer que algo seja removido, abra uma issue.
+- **Dados e artes:** obtidos pela API pública do [umapyoi.net](https://umapyoi.net), um projeto da comunidade.
+- **Ícones do jogo:** [game-icons.net](https://game-icons.net) (Lorc, Delapouite e colaboradores, CC BY 3.0) e [Phosphor Icons](https://phosphoricons.com) (MIT).
+- **Fontes:** [Zen Maru Gothic](https://fonts.google.com/specimen/Zen+Maru+Gothic) e [M PLUS Rounded 1c](https://fonts.google.com/specimen/M+PLUS+Rounded+1c) (Google Fonts, SIL Open Font License).
+- **Selos e ícones deste README:** [shields.io](https://shields.io) e [skillicons.dev](https://skillicons.dev).
