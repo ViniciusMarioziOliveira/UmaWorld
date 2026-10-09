@@ -23,7 +23,7 @@
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&logo=css&logoColor=white" alt="CSS">
   <img src="https://img.shields.io/badge/SVG-FFB13B?style=for-the-badge&logo=svg&logoColor=black" alt="SVG">
-  <img src="https://img.shields.io/badge/pytest-42%20testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest: 42 testes">
+  <img src="https://img.shields.io/badge/pytest-43%20testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest: 43 testes">
   <img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render">
 </p>
 
@@ -134,7 +134,7 @@ No celular, o menu vai para a parte de baixo da tela, o minimapa começa fechado
 | Login | **bcrypt** e **JWT** | Apelido e senha, sem e-mail |
 | Frontend | **HTML**, **CSS** e **JavaScript** puro (ES modules) | Interface sem framework e sem etapa de build |
 | Mundo | **SVG** desenhado em código e um motor próprio | Movimento, colisão, A\*, câmera com zoom e o andar das corredoras |
-| Testes | **pytest** | 42 testes de gacha, economia, WebSocket, banco e desempenho |
+| Testes | **pytest** | 43 testes de gacha, economia, WebSocket, banco e desempenho |
 | Hospedagem | **Render** (`render.yaml`) | Deploy pronto, com o banco no Supabase |
 
 ## Por baixo do capô
@@ -169,7 +169,7 @@ Abra **http://127.0.0.1:8000** e crie uma conta. Sem nenhuma configuração, o j
 Para ver a Praça com outros jogadores e o Chat Global ao vivo, abra uma segunda janela anônima e entre com outra conta.
 
 ```powershell
-pytest    # 42 testes; sempre usam um SQLite temporário
+pytest    # 43 testes; sempre usam um SQLite temporário
 ```
 
 ## Créditos

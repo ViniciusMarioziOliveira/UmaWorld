@@ -21,6 +21,10 @@ services:
         generateValue: true
       - key: GAME_TIMEZONE
         value: America/Sao_Paulo
+      # Todo acesso ao Render passa pelo Cloudflare, que grava o IP de quem acessa neste cabeçalho
+      # (e descarta o que o cliente mandar nele). Os limites de login e cadastro contam por esse IP.
+      - key: CLIENT_IP_HEADER
+        value: cf-connecting-ip
       # O Render pede estes dois valores ao criar o Blueprint (os mesmos do seu .env).
       - key: DATABASE_URL
         sync: false

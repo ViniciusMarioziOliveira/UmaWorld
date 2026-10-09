@@ -61,6 +61,9 @@ DATABASE_URL = resolve_database_url(os.getenv("DATABASE_URL"), os.getenv("DATABA
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-umaworld-troque-esta-chave-em-producao")
 TOKEN_TTL_HOURS = int(os.getenv("TOKEN_TTL_HOURS", "168"))
 GAME_TIMEZONE = os.getenv("GAME_TIMEZONE", "America/Sao_Paulo")
+# Cabeçalho em que um proxy confiável põe o IP de quem acessa (no Render: cf-connecting-ip).
+# Vazio = usa o endereço da própria conexão (rodando local, sem proxy).
+CLIENT_IP_HEADER = os.getenv("CLIENT_IP_HEADER", "").strip().lower()
 
 if SECRET_KEY.startswith("dev-"):
     log.warning("SECRET_KEY padrão em uso — defina SECRET_KEY em produção.")

@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .. import models as m
+from ..config import CLIENT_IP_HEADER
 from ..database import get_db
 from ..game import afk, feed, missions
 from ..game.catalog import STARTER_CHARACTER, STARTER_KIT
@@ -20,11 +21,11 @@ register_limiter = RateLimiter(limit=20, window_seconds=3600)
 
 
 def _ip(request: Request) -> str:
-    # Atrás de um proxy (Render/Railway), o último IP da lista é o que o proxy viu;
-    # os anteriores podem ter sido inventados pelo próprio cliente.
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[-1].strip()
+    # O X-Forwarded-For não serve: o cliente pode inventar o começo da lista, e no Render o fim
+    # é um endereço interno que muda a cada requisição. Atrás de um proxy, o IP vem de um
+    # cabeçalho que ele sobrescreve (no Render, o Cloudflare grava o cf-connecting-ip).
+    if CLIENT_IP_HEADER and (ip := request.headers.get(CLIENT_IP_HEADER, "").strip()):
+        return ip
     return request.client.host if request.client else "?"
 
 

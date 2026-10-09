@@ -20,6 +20,22 @@ def test_register_and_login(client, player):
     ok = client.post("/api/auth/login", json={"nickname": player.nickname.upper(), "password": "segredo123"})
     assert ok.status_code == 200
 
+
+def test_login_limit_counts_the_ip_from_the_proxy(client, player, monkeypatch):
+    # Como no Render: o X-Forwarded-For termina num endereço interno que muda a cada requisição.
+    from app.routers import auth
+
+    monkeypatch.setattr(auth, "CLIENT_IP_HEADER", "cf-connecting-ip")
+    wrong = {"nickname": player.nickname, "password": "errada"}
+
+    def attempt(ip, hop):
+        headers = {"CF-Connecting-IP": ip, "X-Forwarded-For": f"9.9.9.9, {ip}, 10.0.0.{hop}"}
+        return client.post("/api/auth/login", json=wrong, headers=headers).status_code
+
+    assert [attempt("203.0.113.7", hop) for hop in range(auth.login_limiter.limit)] == [401] * auth.login_limiter.limit
+    assert attempt("203.0.113.7", 99) == 429
+    assert attempt("198.51.100.2", 1) == 401  # outra pessoa não é bloqueada
+
     me = player.get("/api/me").json()
     assert me["me"]["nickname"] == player.nickname
     assert me["badges"]["missions"] >= 1  # login diário
