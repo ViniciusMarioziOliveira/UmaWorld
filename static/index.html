@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UmaWorld</title>
+  <meta name="description" content="UmaWorld — ande pela Academia Tracen com a sua corredora, recrute no Templo da Sorte e acompanhe o Chat Global em tempo real.">
+  <meta name="theme-color" content="#17a35f">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M14 10c-8 18-6 40 10 46l6-10c-9-6-10-20-4-32zM50 10c8 18 6 40-10 46l-6-10c9-6 10-20 4-32z' fill='%23ff5c9d'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Tela de entrada -->
+  <div id="auth-screen" class="auth" hidden>
+    <section class="auth-hero">
+      <div class="logo logo-xl"><span class="logo-uma">Uma</span><span class="logo-world">World</span></div>
+      <p class="auth-tagline">Ande pela Academia Tracen com a sua corredora, recrute no Templo da Sorte e acompanhe ao vivo cada 5★ do servidor.</p>
+      <div class="auth-stage" aria-hidden="true">
+        <div class="auth-rail"></div>
+        <img class="auth-uma u1" src="/img/umas/silence_suzuka/full.webp" alt="">
+        <img class="auth-uma u2" src="/img/umas/special_week/full.webp" alt="">
+        <img class="auth-uma u3" src="/img/umas/tokai_teio/full.webp" alt="">
+        <div class="auth-turf"></div>
+      </div>
+    </section>
+
+    <div class="auth-side">
+      <div class="panel auth-card">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-auth-tab="login" role="tab">Entrar</button>
+          <button class="tab" data-auth-tab="register" role="tab">Criar conta</button>
+        </div>
+        <form id="auth-form" autocomplete="on" novalidate>
+          <label class="field">
+            <span>Apelido</span>
+            <input name="nickname" required minlength="3" maxlength="16" autocomplete="username"
+                   placeholder="ex.: Treinadora_01">
+          </label>
+          <label class="field">
+            <span>Senha</span>
+            <input name="password" type="password" required minlength="6" maxlength="64"
+                   autocomplete="current-password" placeholder="mínimo 6 caracteres">
+          </label>
+          <p class="form-hint" id="auth-hint">Que bom te ver de novo na pista!</p>
+          <p class="form-error" id="auth-error" role="alert"></p>
+          <button class="btn btn-primary btn-block btn-lg" type="submit" id="auth-submit">Entrar</button>
+        </form>
+      </div>
+      <aside class="auth-feed panel" id="auth-feed"></aside>
+    </div>
+
+    <footer class="credits">
+      Projeto de fã, sem fins lucrativos · Uma Musume Pretty Derby © Cygames, Inc. ·
+      Dados e artes via <a href="https://umapyoi.net" target="_blank" rel="noopener">umapyoi.net</a> ·
+      Ícones: <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a> (CC BY 3.0) e
+      <a href="https://phosphoricons.com" target="_blank" rel="noopener">Phosphor</a> (MIT)
+    </footer>
+  </div>
+
+  <!-- Jogo -->
+  <div id="app" hidden>
+    <header class="hud">
+      <a href="#/mundo" class="logo"><span class="logo-uma">Uma</span><span class="logo-world">World</span></a>
+      <div class="hud-currencies" id="hud-currencies"></div>
+      <div class="hud-right">
+        <button class="icon-btn feed-toggle" id="feed-toggle" aria-label="Abrir Chat Global">
+          <svg class="ic" aria-hidden="true"><use href="#i-chat"></use></svg><span class="dot-badge" id="feed-unread" hidden></span>
+        </button>
+        <a href="#/perfil" class="hud-user" id="hud-user" aria-label="Sua casa"></a>
+        <button class="icon-btn" id="logout" title="Sair" aria-label="Sair">
+          <svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg>
+        </button>
+      </div>
+    </header>
+    <div class="shell">
+      <nav class="sidenav" id="sidenav" aria-label="Áreas"></nav>
+      <main id="main" tabindex="-1"></main>
+      <aside class="feed panel" id="feed"></aside>
+    </div>
+    <nav class="bottomnav" id="bottomnav" aria-label="Áreas"></nav>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+  <div id="modal-root"></div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

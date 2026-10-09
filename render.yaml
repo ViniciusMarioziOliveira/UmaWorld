@@ -1,0 +1,28 @@
+# Blueprint do Render: um Web Service (FastAPI + WebSocket).
+# O banco é um PostgreSQL no Supabase. Passo a passo completo: GUIA_BANCO_DE_DADOS.md
+# No painel do Render: New > Blueprint > selecione o repositório.
+# A versão do Python vem do arquivo .python-version (3.13, a mesma dos testes).
+services:
+  - type: web
+    name: umaworld
+    runtime: python
+    plan: free
+    # O banco (Supabase) está em São Paulo, e o Render não tem São Paulo: Virgínia é a região mais perto.
+    # Cada consulta leva ~120 ms, e o jogo foi ajustado para isso: um 10x faz umas 17 consultas
+    # (~2,5 s) e ligar o servidor, 13 (~3 s). Veja a Parte D do guia.
+    region: virginia
+    buildCommand: pip install -r requirements.txt
+    # Um único processo: o Chat Global e quem está online na Praça ficam na memória dele.
+    # O --workers 1 é explícito porque o uvicorn também lê a variável WEB_CONCURRENCY.
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /api/health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GAME_TIMEZONE
+        value: America/Sao_Paulo
+      # O Render pede estes dois valores ao criar o Blueprint (os mesmos do seu .env).
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false

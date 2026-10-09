@@ -1,0 +1,1446 @@
+{
+ "source": "https://umapyoi.net",
+ "copyright": "Uma Musume Pretty Derby © Cygames, Inc.",
+ "synced_at": "2026-10-08T18:41:41+00:00",
+ "characters": {
+  "special_week": {
+   "umapyoi_id": 4737,
+   "game_id": 1001,
+   "name_en": "Special Week",
+   "color_main": "#EE6DCB",
+   "color_sub": "#FFDEF9",
+   "birthday": {
+    "day": 2,
+    "month": 5
+   },
+   "sizes": {
+    "b": 81,
+    "w": 56,
+    "h": 81
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "スペシャルウィーク",
+   "height": 158,
+   "shoe_size": "Left: 23.5cm Right: 23.0cm",
+   "weight": "Slight decrease (Nervous before races)",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Gonna do 'er best! A naive country girl beelining to her dream.",
+   "profile": "My name is Special Week! My dream is to be the best Umamusume in Japan! I'm gonna pull my own weight to make my moms proud!",
+   "strengths": "Giving in-depth food critiques",
+   "weaknesses": "Touch-and-go ticket gates",
+   "ears_fact": "They pick up on any sound of cooking.",
+   "tail_fact": "She's not very good at playing poker; her tail calls her bluff.",
+   "family_fact": "Her eye color came from her birth mother.",
+   "link": "https://umamusume.jp/character/specialweek"
+  },
+  "silence_suzuka": {
+   "umapyoi_id": 4536,
+   "game_id": 1002,
+   "name_en": "Silence Suzuka",
+   "color_main": "#29BD70",
+   "color_sub": "#FFCE48",
+   "birthday": {
+    "day": 1,
+    "month": 5
+   },
+   "sizes": {
+    "b": 70,
+    "w": 53,
+    "h": 79
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "サイレンススズカ",
+   "height": 161,
+   "shoe_size": "Left: 23.5cm Right: 23.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "The Silent Rider. Aiming to go beyond the speed of sound",
+   "profile": "I'm Silence Suzuka. I like to run. I'm not giving the lead to anyone. Um... That's all.",
+   "strengths": "Running",
+   "weaknesses": "Crowded places",
+   "ears_fact": "They tune out everything when she's thinking about running.",
+   "tail_fact": "She puts care into it to reduce air resistance.",
+   "family_fact": "They give her extra money for shoes.",
+   "link": "https://umamusume.jp/character/silencesuzuka"
+  },
+  "tokai_teio": {
+   "umapyoi_id": 4550,
+   "game_id": 1003,
+   "name_en": "Tokai Teio",
+   "color_main": "#3376D2",
+   "color_sub": "#FF99D0",
+   "birthday": {
+    "day": 20,
+    "month": 4
+   },
+   "sizes": {
+    "b": 77,
+    "w": 54,
+    "h": 76
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "トウカイテイオー",
+   "height": 150,
+   "shoe_size": "Both: 22.0cm",
+   "weight": "No fluctuation",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Invincible and cute! An innocent, hoppin' girl.",
+   "profile": "Heya, I'm Tokai Teio! I'm going to be an undefeated Triple Crown Umamusume, so don't let me out of your sight!",
+   "strengths": "Befriending anybody",
+   "weaknesses": "Doctors",
+   "ears_fact": "They always pay attention to what the Student Council President says.",
+   "tail_fact": "Waves around excitedly when she gets attention.",
+   "family_fact": "She cried after trying to not call her parents \"mommy\" and \"daddy\".",
+   "link": "https://umamusume.jp/character/tokaiteio"
+  },
+  "oguri_cap": {
+   "umapyoi_id": 4879,
+   "game_id": 1006,
+   "name_en": "Oguri Cap",
+   "color_main": "#3A7AD2",
+   "color_sub": "#ECE7E7",
+   "birthday": {
+    "day": 27,
+    "month": 3
+   },
+   "sizes": {
+    "b": 82,
+    "w": 57,
+    "h": 82
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "オグリキャップ",
+   "height": 167,
+   "shoe_size": "Both: 27.0cm",
+   "weight": "Slight increase (Ate too much)",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "A simple and cool dreamer from the countryside.",
+   "profile": "I am Oguri Cap. I'm going to do my best to make everyone in my hometown happy. Please take care of me.",
+   "strengths": "Eating delicious food",
+   "weaknesses": "Swimming",
+   "ears_fact": "Can pick out the voices of the people from her hometown in the cheering.",
+   "tail_fact": "She has a soft body, so every part of it must be maintained.",
+   "family_fact": "Family vacations mean hot springs, and she is a regular at one of the hidden hot springs.",
+   "link": "https://umamusume.jp/character/oguricap"
+  },
+  "gold_ship": {
+   "umapyoi_id": 4891,
+   "game_id": 1007,
+   "name_en": "Gold Ship",
+   "color_main": "#DA3C57",
+   "color_sub": "#E9DA36",
+   "birthday": {
+    "day": 6,
+    "month": 3
+   },
+   "sizes": {
+    "b": 88,
+    "w": 55,
+    "h": 88
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ゴールドシップ",
+   "height": 170,
+   "shoe_size": "Both: 26.5cm",
+   "weight": "Unmeasurable",
+   "grade": "???",
+   "residence": "Ritto Dorm",
+   "slogan": "Rude and unrestrained! An enigmatic golden denpa girl!",
+   "profile": "Yo, I'm Gold Ship! I don't care if it's on the turf, on fire, or at the edge of the universe. I'm going to find something interesting wherever I can! ☆",
+   "strengths": "Moving her facial muscles",
+   "weaknesses": "Staying still",
+   "ears_fact": "Loves to suddenly cover another person's ears and asking \"Guess who?\".",
+   "tail_fact": "She sometimes leaves it in her room (according to her).",
+   "family_fact": "They seem to be a national secret.",
+   "link": "https://umamusume.jp/character/goldship"
+  },
+  "mejiro_mcqueen": {
+   "umapyoi_id": 4962,
+   "game_id": 1013,
+   "name_en": "Mejiro McQueen",
+   "color_main": "#00B5BE",
+   "color_sub": "#DFC8E7",
+   "birthday": {
+    "day": 3,
+    "month": 4
+   },
+   "sizes": {
+    "b": 71,
+    "w": 54,
+    "h": 76
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "メジロマックイーン",
+   "height": 159,
+   "shoe_size": "Both: 22.5cm",
+   "weight": "Slight increase (Desperately adjusting!)",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Pride of the prestigious Mejiro family. Elegant, determined young lady.",
+   "profile": "My name is Mejiro McQueen. Conquering the \"Spring Tennosho\" has been a long-cherished goal of the Mejiro family, and I will do it with my own two legs.",
+   "strengths": "Table manners",
+   "weaknesses": "Resisting the temptation of sweets",
+   "ears_fact": "They tend to stand alert when in front of others.",
+   "tail_fact": "Sways wildly when she's talking about sports.",
+   "family_fact": "Her parents call her \"Mac-chan\".",
+   "link": "https://umamusume.jp/character/mejiromcqueen"
+  },
+  "admire_vega": {
+   "umapyoi_id": 5191,
+   "game_id": 1033,
+   "name_en": "Admire Vega",
+   "color_main": "#3865A1",
+   "color_sub": "#78D5E1",
+   "birthday": {
+    "day": 12,
+    "month": 3
+   },
+   "sizes": {
+    "b": 85,
+    "w": 57,
+    "h": 82
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "アドマイヤベガ",
+   "height": 157,
+   "shoe_size": "Both: 23.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Burdened with resolve. A first magnitude star who stays alone.",
+   "profile": "Admire Vega. ...Can I go now? I need to train more, win more races, and I need to become a first-magnitude star.",
+   "strengths": "Reading out loud, cold weather",
+   "weaknesses": "Busy places",
+   "ears_fact": "They twitch to voices that sound like an older sister.",
+   "tail_fact": "She has a habit of unconsciously clutching it while sleeping.",
+   "family_fact": "They prepare two birthday cakes every year.",
+   "link": "https://umamusume.jp/character/admirevega"
+  },
+  "symboli_rudolf": {
+   "umapyoi_id": 5009,
+   "game_id": 1017,
+   "name_en": "Symboli Rudolf",
+   "color_main": "#1C7763",
+   "color_sub": "#C6314B",
+   "birthday": {
+    "day": 13,
+    "month": 3
+   },
+   "sizes": {
+    "b": 86,
+    "w": 59,
+    "h": 85
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "シンボリルドルフ",
+   "height": 165,
+   "shoe_size": "Both: 25.0cm",
+   "weight": "Close to Ideal",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "The reigning \"Emperor\", her authority is absolute!",
+   "profile": "I am Symboli Rudolf. I am the one who will stand at the top of every Umamusume and lead them to become \"Emperors\". Those of you who share my aspirations, let's work together to conquer the world!",
+   "strengths": "Chess",
+   "weaknesses": "Interacting with others casually",
+   "ears_fact": "Her ears prick up when she hears a good pun.",
+   "tail_fact": "When she's giving a speech, every strand of hair is powerful.",
+   "family_fact": "Her parents taught her Imperialism from a young age.",
+   "link": "https://umamusume.jp/character/symbolirudolf"
+  },
+  "kitasan_black": {
+   "umapyoi_id": 5603,
+   "game_id": 1068,
+   "name_en": "Kitasan Black",
+   "color_main": "#5a6065",
+   "color_sub": "#fc6d31",
+   "birthday": {
+    "day": 10,
+    "month": 3
+   },
+   "sizes": {
+    "b": 85,
+    "w": 56,
+    "h": 88
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "キタサンブラック",
+   "height": 162,
+   "shoe_size": "Both: 23.0cm",
+   "weight": "Still growing with vigour!",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "She lights up our hearts! A cheerful and lively festival girl!",
+   "profile": "I'm Kitasan Black! I'm going to run as fast as I can to make this race as exciting as a festival!",
+   "strengths": "Massages",
+   "weaknesses": "Turning a blind eye to things",
+   "ears_fact": "She has an excellent sense of sound.",
+   "tail_fact": "Even her tail can hold heavy things.",
+   "family_fact": "A family of 30 people, including her father's disciples, live with her.",
+   "link": "https://umamusume.jp/character/kitasanblack"
+  },
+  "satono_diamond": {
+   "umapyoi_id": 5593,
+   "game_id": 1067,
+   "name_en": "Satono Diamond",
+   "color_main": "#94bf01",
+   "color_sub": "#f9eb39",
+   "birthday": {
+    "day": 30,
+    "month": 1
+   },
+   "sizes": {
+    "b": 87,
+    "w": 54,
+    "h": 84
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "サトノダイヤモンド",
+   "height": 158,
+   "shoe_size": "Both: 21.0cm",
+   "weight": "No change, right?",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Diamond-grade core! A young lady who defies jinxes!",
+   "profile": "My name is Satono Diamond. My fate has never been decided from the beginning. I will make the future shine with my running!",
+   "strengths": "Remembering promises, crane games",
+   "weaknesses": "Rain, walking through crowds",
+   "ears_fact": "Always have a translucent sheen.",
+   "tail_fact": "It feels supreme (Kitasan Black's words).",
+   "family_fact": "Her father is a distinguished man and a philanthropist in the Umamusume world.",
+   "link": "https://umamusume.jp/character/satonodiamond"
+  },
+  "forever_young": {
+   "umapyoi_id": 10404,
+   "game_id": 1138,
+   "name_en": "Forever Young",
+   "color_main": "#822b4a",
+   "color_sub": "#d8ced2",
+   "birthday": {
+    "day": 24,
+    "month": 2
+   },
+   "sizes": {
+    "b": 90,
+    "w": 60,
+    "h": 89
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "フォーエバーヤング",
+   "height": 167,
+   "shoe_size": null,
+   "weight": null,
+   "grade": null,
+   "residence": null,
+   "slogan": null,
+   "profile": null,
+   "strengths": null,
+   "weaknesses": null,
+   "ears_fact": null,
+   "tail_fact": null,
+   "family_fact": null,
+   "link": "https://umamusume.jp/character/foreveryoung"
+  },
+  "marche_lorraine": {
+   "umapyoi_id": 10403,
+   "game_id": 1140,
+   "name_en": "Marche Lorraine",
+   "color_main": "#8b1538",
+   "color_sub": "#e9a2b2",
+   "birthday": {
+    "day": 4,
+    "month": 2
+   },
+   "sizes": {
+    "b": 90,
+    "w": 59,
+    "h": 89
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "マルシュロレーヌ",
+   "height": 157,
+   "shoe_size": null,
+   "weight": null,
+   "grade": null,
+   "residence": null,
+   "slogan": null,
+   "profile": null,
+   "strengths": null,
+   "weaknesses": null,
+   "ears_fact": null,
+   "tail_fact": null,
+   "family_fact": null,
+   "link": "https://umamusume.jp/character/marchelorraine"
+  },
+  "vodka": {
+   "umapyoi_id": 4903,
+   "game_id": 1008,
+   "name_en": "Vodka",
+   "color_main": "#D4C200",
+   "color_sub": "#3DD1D7",
+   "birthday": {
+    "day": 4,
+    "month": 4
+   },
+   "sizes": {
+    "b": 76,
+    "w": 55,
+    "h": 78
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ウオッカ",
+   "height": 165,
+   "shoe_size": "Left: 24.5cm Right: 24.0cm",
+   "weight": "No fluctuation",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Runaway youth! A pure-hearted, delinquent roadster",
+   "profile": "Yo, I'm Vodka! My goal is to be the coolest Umamusume in the world! I'm not gonna do anything stupid. Remember that!",
+   "strengths": "Acting like she's riding a motorcycle",
+   "weaknesses": "Love stories",
+   "ears_fact": "She gets really shy when someone touches them.",
+   "tail_fact": "She practices shaking it to look cool.",
+   "family_fact": "Her and her dad are very mischievous together, they get scolded by her mom a lot.",
+   "link": "https://umamusume.jp/character/vodka"
+  },
+  "daiwa_scarlet": {
+   "umapyoi_id": 4915,
+   "game_id": 1009,
+   "name_en": "Daiwa Scarlet",
+   "color_main": "#4F64D8",
+   "color_sub": "#E73472",
+   "birthday": {
+    "day": 13,
+    "month": 5
+   },
+   "sizes": {
+    "b": 90,
+    "w": 56,
+    "h": 82
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ダイワスカーレット",
+   "height": 163,
+   "shoe_size": "Both: 24.5cm",
+   "weight": "Unknown (Refuses measurement)",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Self-important! A girl with a competitive streak!",
+   "profile": "Hello, I'm Daiwa Scarlet! I'll do my best to... Hmph! I'm going to be number one. That's all!",
+   "strengths": "Studying, Housework",
+   "weaknesses": "Compromising",
+   "ears_fact": "They unconsciously reveal her true feelings.",
+   "tail_fact": "She struggles to brush it every morning.",
+   "family_fact": "She misses her mother, who's always enthusiastic about her racing",
+   "link": "https://umamusume.jp/character/daiwascarlet"
+  },
+  "grass_wonder": {
+   "umapyoi_id": 4939,
+   "game_id": 1011,
+   "name_en": "Grass Wonder",
+   "color_main": "#3A34AC",
+   "color_sub": "#E3493F",
+   "birthday": {
+    "day": 18,
+    "month": 2
+   },
+   "sizes": {
+    "b": 77,
+    "w": 53,
+    "h": 84
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "グラスワンダー",
+   "height": 152,
+   "shoe_size": "Left: 23.0cm Right: 23.5cm",
+   "weight": "No fluctuation",
+   "grade": "Middle School",
+   "residence": "Miho Dorm",
+   "slogan": "Neat and pretty. The ideal Japanese woman from America.",
+   "profile": "My name is Grass Wonder. Since I was born as a Umamusume, I want to pursue this path to the end. Hehe ♪",
+   "strengths": "Japanese sweets, Japanese culture in general, competitive karuta.",
+   "weaknesses": "Insects, disrespecting history and tradition.",
+   "ears_fact": "They don't move an inch when she's making tea.",
+   "tail_fact": "Able to swat bugs without looking behind her.",
+   "family_fact": "\"My parents influenced my love for Japan. They have a Japanese-style room in their house.\"",
+   "link": "https://umamusume.jp/character/grasswonder"
+  },
+  "el_condor_pasa": {
+   "umapyoi_id": 4974,
+   "game_id": 1014,
+   "name_en": "El Condor Pasa",
+   "color_main": "#DD4E31",
+   "color_sub": "#EFDB28",
+   "birthday": {
+    "day": 17,
+    "month": 3
+   },
+   "sizes": {
+    "b": 89,
+    "w": 58,
+    "h": 86
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "エルコンドルパサー",
+   "height": 163,
+   "shoe_size": "Both: 24.0cm",
+   "weight": "Slight increase (Building muscle)",
+   "grade": "Middle School",
+   "residence": "Miho Dorm",
+   "slogan": "Mystery North American bird! The cheerful and eccentric lucha libre",
+   "profile": "I'm the crimson bird that runs the course! El Condor Pasa is closing in! I'm flying around the world!",
+   "strengths": "Pro-wrestling",
+   "weaknesses": "Being quiet",
+   "ears_fact": "She goes on the defense when she hears the wrestling count.",
+   "tail_fact": "Grabbing her tail is an automatic foul.",
+   "family_fact": "She grew up with a hawk named Mambo. He's like her sibling.",
+   "link": "https://umamusume.jp/character/elcondorpasa"
+  },
+  "mejiro_ryan": {
+   "umapyoi_id": 5122,
+   "game_id": 1027,
+   "name_en": "Mejiro Ryan",
+   "color_main": "#14BAAE",
+   "color_sub": "#7C4D3A",
+   "birthday": {
+    "day": 11,
+    "month": 4
+   },
+   "sizes": {
+    "b": 87,
+    "w": 57,
+    "h": 86
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "メジロライアン",
+   "height": 163,
+   "shoe_size": "Both: 24.5cm",
+   "weight": "Slight increase (Building muscle)",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "She feels fresh and sporty! Even her glistening sweat is pure.",
+   "profile": "My name is Mejiro Ryan! Train your body, stay healthy! Grow some muscle, stay fit! Let's go for it!",
+   "strengths": "Exercise",
+   "weaknesses": "Cholesterol",
+   "ears_fact": "They twitch around a lot when she's reading shoujo manga.",
+   "tail_fact": "She sweats a lot, so she always has a towel for her tail.",
+   "family_fact": "Her father is very young and is often mistaken for her brother.",
+   "link": "https://umamusume.jp/character/mejiroryan"
+  },
+  "rice_shower": {
+   "umapyoi_id": 5156,
+   "game_id": 1030,
+   "name_en": "Rice Shower",
+   "color_main": "#384A86",
+   "color_sub": "#CA3E6D",
+   "birthday": {
+    "day": 5,
+    "month": 3
+   },
+   "sizes": {
+    "b": 75,
+    "w": 51,
+    "h": 76
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ライスシャワー",
+   "height": 145,
+   "shoe_size": "Both: 21.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "Unhappy disposition? A sorrowful maiden who lives a praiseworthy life.",
+   "profile": "I'm... Rice Shower. Um... I'm a useless girl who makes others unhappy... but I'm trying my best to change!",
+   "strengths": "Drawing",
+   "weaknesses": "Other's misfortune, ghosts",
+   "ears_fact": "They droop when she hears about other's unhappiness.",
+   "tail_fact": "She pays attention not to bump it into people.",
+   "family_fact": "She used to fall asleep listening to her parents read picture books.",
+   "link": "https://umamusume.jp/character/riceshower"
+  },
+  "maruzensky": {
+   "umapyoi_id": 4844,
+   "game_id": 1004,
+   "name_en": "Maruzensky",
+   "color_main": "#EA504A",
+   "color_sub": "#FFCD00",
+   "birthday": {
+    "day": 19,
+    "month": 5
+   },
+   "sizes": {
+    "b": 92,
+    "w": 58,
+    "h": 88
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "マルゼンスキー",
+   "height": 164,
+   "shoe_size": "Both: 26.0cm",
+   "weight": "Ideal",
+   "grade": "High School",
+   "residence": "Lives alone",
+   "slogan": "Retro-Showa style Supercar Lady",
+   "profile": "Hi, I'm Maruzensky! Did you come to see this new style of running too? Hehe ♪ Even though I'm crazy about it... I don't know how to feel ♪",
+   "strengths": "Drifting",
+   "weaknesses": "Driving slowly",
+   "ears_fact": "Listening to Eurobeat makes her want to drive faster.",
+   "tail_fact": "She likes to shampoo her hair in the morning to make it smooth and silky.",
+   "family_fact": "She drives her father's second-hand red supercar.",
+   "link": "https://umamusume.jp/character/maruzensky"
+  },
+  "taiki_shuttle": {
+   "umapyoi_id": 4927,
+   "game_id": 1010,
+   "name_en": "Taiki Shuttle",
+   "color_main": "#73C032",
+   "color_sub": "#FFAC42",
+   "birthday": {
+    "day": 23,
+    "month": 3
+   },
+   "sizes": {
+    "b": 94,
+    "w": 59,
+    "h": 90
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "タイキシャトル",
+   "height": 172,
+   "shoe_size": "Both: 25.0cm (custom order)",
+   "weight": "Slight increase (\"But it's no problem!\")",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "American-born friendly girl.",
+   "profile": "Howdy! I'm Taiki Shuttle! I'm here to make everyone happy with my powerful running!",
+   "strengths": "Positive thinking",
+   "weaknesses": "Being alone",
+   "ears_fact": "Whenever she hears about a party, she runs to it.",
+   "tail_fact": "She has her tail spray mailed to her.",
+   "family_fact": "My parents always welcome fireworks in the house.",
+   "link": "https://umamusume.jp/character/taikishuttle"
+  },
+  "air_groove": {
+   "umapyoi_id": 5021,
+   "game_id": 1018,
+   "name_en": "Air Groove",
+   "color_main": "#0092CB",
+   "color_sub": "#FAE053",
+   "birthday": {
+    "day": 6,
+    "month": 4
+   },
+   "sizes": {
+    "b": 90,
+    "w": 57,
+    "h": 86
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "エアグルーヴ",
+   "height": 165,
+   "shoe_size": "Both: 24.5cm",
+   "weight": "Superb",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Level-headed \"Empress\",a talented and colorful career lady!",
+   "profile": "I am Air Groove. If you don't bend your beliefs, your ideals will surely sprout. To demonstrate this, I, the Empress, will be the guiding light for everyone.",
+   "strengths": "Growing flowers",
+   "weaknesses": "Flashing lights and sudden movements",
+   "ears_fact": "They droop gently when tending to flowers.",
+   "tail_fact": "She uses the same tail oil as her mother.",
+   "family_fact": "She spends all year meticulously planning her mother's birthday party.",
+   "link": "https://umamusume.jp/character/airgroove"
+  },
+  "mihono_bourbon": {
+   "umapyoi_id": 5111,
+   "game_id": 1026,
+   "name_en": "Mihono Bourbon",
+   "color_main": "#EE60A1",
+   "color_sub": "#F0ED41",
+   "birthday": {
+    "day": 25,
+    "month": 4
+   },
+   "sizes": {
+    "b": 86,
+    "w": 54,
+    "h": 87
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ミホノブルボン",
+   "height": 160,
+   "shoe_size": "Both: 24.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Your orders will be strictly followed! Cyborg Umamusume.",
+   "profile": "My name is Mihono Bourbon. My goal is locked onto becoming a Triple Crown Umamusume. Please refer to my data for legwork and other information.",
+   "strengths": "Staredowns",
+   "weaknesses": "Operating electrical appliances",
+   "ears_fact": "She wakes up instantly when commanded, even when in a deep sleep.",
+   "tail_fact": "Rumor has it that she has enough strength to stand on her own tail...",
+   "family_fact": "Her family is living in an old-fashioned home because of the frequent breakage of household appliances.",
+   "link": "https://umamusume.jp/character/mihonobourbon"
+  },
+  "super_creek": {
+   "umapyoi_id": 5325,
+   "game_id": 1045,
+   "name_en": "Super Creek",
+   "color_main": "#5693DA",
+   "color_sub": "#C8C9C7",
+   "birthday": {
+    "day": 27,
+    "month": 5
+   },
+   "sizes": {
+    "b": 97,
+    "w": 61,
+    "h": 91
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "スーパークリーク",
+   "height": 168,
+   "shoe_size": "Both: 25.5cm",
+   "weight": "Slight increase (Reason is a secret)",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "A gentle older sister who can heal you with her calm, motherly nature.",
+   "profile": "Tee-hee... I'm Super Creek~ I'll do my best to make everyone smile. Please leave it to me ♪",
+   "strengths": "Helping others",
+   "weaknesses": "Drawing",
+   "ears_fact": "She's good at cleaning other's ears, but not getting her ears cleaned.",
+   "tail_fact": "It's great at soothing small children.",
+   "family_fact": "Her family's day-care center has a reputation for making people feel at home.",
+   "link": "https://umamusume.jp/character/supercreek"
+  },
+  "seiun_sky": {
+   "umapyoi_id": 5044,
+   "game_id": 1020,
+   "name_en": "Seiun Sky",
+   "color_main": "#65D283",
+   "color_sub": "#F4DA40",
+   "birthday": {
+    "day": 26,
+    "month": 4
+   },
+   "sizes": {
+    "b": 77,
+    "w": 55,
+    "h": 80
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "セイウンスカイ",
+   "height": 155,
+   "shoe_size": "Both: 22.5cm",
+   "weight": "Undeclared",
+   "grade": "Middle School",
+   "residence": "Miho Dorm",
+   "slogan": "My pace, my life. Like a drifting cloud...",
+   "profile": "Yahoo-, it's Seiun Sky. Take your time and relax... When you're aiming for a big goal, it's important to take your time, right?",
+   "strengths": "Napping and fishing",
+   "weaknesses": "Small, cramped places (The gate, the gate!)",
+   "ears_fact": "When they stand on edge, it's meaningful.",
+   "tail_fact": "Naturally well-done without tending to it.",
+   "family_fact": "When she goes home, she goes fishing with her grandfather and his fishing buddies.",
+   "link": "https://umamusume.jp/character/seiunsky"
+  },
+  "haru_urara": {
+   "umapyoi_id": 5404,
+   "game_id": 1052,
+   "name_en": "Haru Urara",
+   "color_main": "#FA7395",
+   "color_sub": "#EDE04B",
+   "birthday": {
+    "day": 27,
+    "month": 2
+   },
+   "sizes": {
+    "b": 74,
+    "w": 51,
+    "h": 73
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ハルウララ",
+   "height": 140,
+   "shoe_size": "Both: 20.0cm",
+   "weight": "Slight increase (But doesn't care)",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "She has lots of losses, but won't lose hope! The girl who never gives up!",
+   "profile": "I'm Haru Urara! I love carrots and I lo~ve running because it's fun!♪ I'm going to try my very best to finish first!",
+   "strengths": "Persisting with all her might",
+   "weaknesses": "Difficult kanji",
+   "ears_fact": "Hard words go in the right and come out the left.",
+   "tail_fact": "She thought spinning it would make her go faster.",
+   "family_fact": "Her favorite dish is her mother's carrot rice.",
+   "link": "https://umamusume.jp/character/haruurara"
+  },
+  "nice_nature": {
+   "umapyoi_id": 5485,
+   "game_id": 1060,
+   "name_en": "Nice Nature",
+   "color_main": "#28A959",
+   "color_sub": "#B82720",
+   "birthday": {
+    "day": 16,
+    "month": 4
+   },
+   "sizes": {
+    "b": 79,
+    "w": 56,
+    "h": 80
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ナイスネイチャ",
+   "height": 157,
+   "shoe_size": "Both: 22.0cm",
+   "weight": "No fluctuation",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "Expectations? No, thank you! A cynical girl.",
+   "profile": "Uh... I'm Nice Nature. I guess I don't really live up to the name of \"Nice Nature\", haha... Let's take it easy, shall we?",
+   "strengths": "Table tennis, searching for tasty snacks",
+   "weaknesses": "Social media",
+   "ears_fact": "They tend to react when she hears the word \"nee-chan\".",
+   "tail_fact": "She takes care of it in the middle of the night in secret.",
+   "family_fact": "Her parents' snack bar is decorated with articles about their daughter.",
+   "link": "https://umamusume.jp/character/nicenature"
+  },
+  "king_halo": {
+   "umapyoi_id": 5497,
+   "game_id": 1061,
+   "name_en": "King Halo",
+   "color_main": "#0E9451",
+   "color_sub": "#1C57A5",
+   "birthday": {
+    "day": 28,
+    "month": 4
+   },
+   "sizes": {
+    "b": 85,
+    "w": 60,
+    "h": 85
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "キングヘイロー",
+   "height": 159,
+   "shoe_size": "Both: 23.0cm",
+   "weight": "Perfect",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "A domineering young lady. Her pride is higher than the sky!",
+   "profile": "Ohhh-ho-ho! My name is King Halo. As a first-class Umamusume, I'll give you the best results... And show the world this talent of mine!",
+   "strengths": "Anything design and fashion related",
+   "weaknesses": "Crowds, heat, etc. aren't appropriate for the King",
+   "ears_fact": "They don't want to hear anything other than topics adequate for the first-class.",
+   "tail_fact": "Her tail wagging is always top-notch.",
+   "family_fact": "Her mother is catastrophically incapable of housework, so she has servants.",
+   "link": "https://umamusume.jp/character/kinghalo"
+  },
+  "agnes_tachyon": {
+   "umapyoi_id": 5179,
+   "game_id": 1032,
+   "name_en": "Agnes Tachyon",
+   "color_main": "#35B2B6",
+   "color_sub": "#E2E868",
+   "birthday": {
+    "day": 13,
+    "month": 4
+   },
+   "sizes": {
+    "b": 83,
+    "w": 55,
+    "h": 81
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "アグネスタキオン",
+   "height": 159,
+   "shoe_size": "Both: 22.5cm",
+   "weight": "Rejects measurement",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "A Forbidden Mad Scientist. Physical research is everything!",
+   "profile": "Aren't you interested about how fast a Umamusume can go? If you are, I, Agnes Tachyon, would like you to be my guinea pig.",
+   "strengths": "Research, sweets, and tea",
+   "weaknesses": "Research interference, bitterness",
+   "ears_fact": "She refuses to be touched on the ears or forehead.",
+   "tail_fact": "When she gets an idea, her tail stands on end.",
+   "family_fact": "The unorthodox child of a family with a spectacular reputation in the racing world.",
+   "link": "https://umamusume.jp/character/agnestachyon"
+  },
+  "winning_ticket": {
+   "umapyoi_id": 5213,
+   "game_id": 1035,
+   "name_en": "Winning Ticket",
+   "color_main": "#DD3D5B",
+   "color_sub": "#EDE233",
+   "birthday": {
+    "day": 21,
+    "month": 3
+   },
+   "sizes": {
+    "b": 88,
+    "w": 57,
+    "h": 85
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ウイニングチケット",
+   "height": 157,
+   "shoe_size": "Both: 21.5cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Laugh and cry to your heart's content! An honest girl who's true to her feelings.",
+   "profile": "My... My... My dream is to be a Derby Umamusume! And then there's... ah! My name!!!! My name is Winning Ticket! Nice to meet you!",
+   "strengths": "Full of support, full of emotion",
+   "weaknesses": "Not giving her all!!!!!!",
+   "ears_fact": "According to her best friend, \"Even her ear movement is annoying\".",
+   "tail_fact": "Expressions of joy, anger, grief, and pleasure are always visible.",
+   "family_fact": "Watching the Derby together is the most important family event of all.",
+   "link": "https://umamusume.jp/character/winningticket"
+  },
+  "sakura_bakushin_o": {
+   "umapyoi_id": 5280,
+   "game_id": 1041,
+   "name_en": "Sakura Bakushin O",
+   "color_main": "#EE6FAB",
+   "color_sub": "#F2D4D7",
+   "birthday": {
+    "day": 14,
+    "month": 4
+   },
+   "sizes": {
+    "b": 83,
+    "w": 55,
+    "h": 83
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "サクラバクシンオー",
+   "height": 158,
+   "shoe_size": "Both: 24.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "The great and reckless class president. She's always on the move!",
+   "profile": "Hello! My name is Sakura Bakushin O! As you can see, I am a brilliant class representative! Let's set a great example for everyone! BAKUSHIIIN!",
+   "strengths": "Being dependable, helping others",
+   "weaknesses": "Things that require more than 3 steps",
+   "ears_fact": "She only hears half of what people are saying.",
+   "tail_fact": "When she's rushing, you can't even catch the tips of her tail.",
+   "family_fact": "Her family's motto is \"Praise, praise, praise, and praise!\".",
+   "link": "https://umamusume.jp/character/sakurabakushino"
+  },
+  "matikanefukukitaru": {
+   "umapyoi_id": 5451,
+   "game_id": 1056,
+   "name_en": "Matikanefukukitaru",
+   "color_main": "#3D89E9",
+   "color_sub": "#F8A717",
+   "birthday": {
+    "day": 22,
+    "month": 5
+   },
+   "sizes": {
+    "b": 84,
+    "w": 59,
+    "h": 83
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "マチカネフクキタル",
+   "height": 158,
+   "shoe_size": "Both: 23.5cm",
+   "weight": "Today's fortune was \"Bad\", so slight decrease",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Come, good fortune! A divination-loving happy-go-lucky girl.",
+   "profile": "Hello! They call me Matikanefukukitaru! I believe in the divine messages of Shiraoki-sama, and I constantly am working on my fortune telling, waiting for the day I'll be blessed with good fortune!",
+   "strengths": "Fortune-telling",
+   "weaknesses": "Unlucky things",
+   "ears_fact": "She will sometimes use them to point while fortune-telling.",
+   "tail_fact": "Will suddenly stop moving during a fortune-telling session.",
+   "family_fact": "Like an excellent older sister, she admires her younger sister's cheerfulness.",
+   "link": "https://umamusume.jp/character/matikanefukukitaru"
+  },
+  "twin_turbo": {
+   "umapyoi_id": 5584,
+   "game_id": 1066,
+   "name_en": "Twin Turbo",
+   "color_main": "#1985d2",
+   "color_sub": "#27b784",
+   "birthday": {
+    "day": 13,
+    "month": 4
+   },
+   "sizes": {
+    "b": 72,
+    "w": 51,
+    "h": 74
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ツインターボ",
+   "height": 146,
+   "shoe_size": "Left: 20.0cm Right: 19.5cm",
+   "weight": "Measurement not possible",
+   "grade": "Middle School",
+   "residence": "Miho Dorm",
+   "slogan": "Turbo full throttle! An explosive Umamusume who knows no limits!",
+   "profile": "Twin Turbo! I'll take the first Turbo, I'll take it for sure! Let's go, Turbo, full throttle!!!",
+   "strengths": "Exceeding limits",
+   "weaknesses": "Kanji",
+   "ears_fact": "Twitch ever more happily the more she's ran down.",
+   "tail_fact": "Wags all over the place, never staying still.",
+   "family_fact": "Her parents found their frail daughter's recklessness to be an indication of growth.",
+   "link": "https://umamusume.jp/character/twinturbo"
+  },
+  "ikuno_dictus": {
+   "umapyoi_id": 5554,
+   "game_id": 1063,
+   "name_en": "Ikuno Dictus",
+   "color_main": "#49b73f",
+   "color_sub": "#c6d1d5",
+   "birthday": {
+    "day": 16,
+    "month": 4
+   },
+   "sizes": {
+    "b": 75,
+    "w": 53,
+    "h": 82
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "イクノディクタス",
+   "height": 163,
+   "shoe_size": "Both: 23.0cm",
+   "weight": "Perfect",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "A thorough managing principle. A capable Umamusume who combines hot with cold.",
+   "profile": "My name is Ikuno Dictus. If you are looking for management, leave it to me. I will manage you thoroughly with an iron will.",
+   "strengths": "Perfect attendance, splitting chopsticks cleanly",
+   "weaknesses": "Gambling, taking selfies",
+   "ears_fact": "The fur on both ears always matches exactly.",
+   "tail_fact": "She uses it to point at things.",
+   "family_fact": "She tends to lead family meetings.",
+   "link": "https://umamusume.jp/character/ikunodictus"
+  },
+  "biwa_hayahide": {
+   "umapyoi_id": 5077,
+   "game_id": 1023,
+   "name_en": "Biwa Hayahide",
+   "color_main": "#B03D81",
+   "color_sub": "#E776B6",
+   "birthday": {
+    "day": 10,
+    "month": 3
+   },
+   "sizes": {
+    "b": 93,
+    "w": 61,
+    "h": 88
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ビワハヤヒデ",
+   "height": 171,
+   "shoe_size": "Both: 25.0cm",
+   "weight": "No fluctuation",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Passionate intellect. Use logic as your weapon!",
+   "profile": "I'm Biwa Hayahide. My goal is to assemble the perfect winning formula. ...Also, I have a normal-sized head!",
+   "strengths": "Tidying up",
+   "weaknesses": "Rainy season",
+   "ears_fact": "As a child, she was sensitive to noises and was often startled by them.",
+   "tail_fact": "When it's damp, she has a hard time getting her tail into the tail hole of her clothes.",
+   "family_fact": "Her mother and her sister used to have matching hairstyles.",
+   "link": "https://umamusume.jp/character/biwahayahide"
+  },
+  "narita_taishin": {
+   "umapyoi_id": 5382,
+   "game_id": 1050,
+   "name_en": "Narita Taishin",
+   "color_main": "#E575CE",
+   "color_sub": "#F3DD6D",
+   "birthday": {
+    "day": 10,
+    "month": 6
+   },
+   "sizes": {
+    "b": 69,
+    "w": 50,
+    "h": 73
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "ナリタタイシン",
+   "height": 145,
+   "shoe_size": "Both: 20.5cm",
+   "weight": "Rejects measurement",
+   "grade": "High School",
+   "residence": "Ritto Dorm",
+   "slogan": "Cool and dry! Even though she's small, she still wins.",
+   "profile": "Narita Taishin. That's all. I just want to win and shove it in the faces of the ones who made fun of me... Leave me alone.",
+   "strengths": "Video games, housework",
+   "weaknesses": "Crowds",
+   "ears_fact": "They only turn towards topics that interest her.",
+   "tail_fact": "Flicks when touched by anyone other than a trusted friend.",
+   "family_fact": "Rumor has it that the moms of BNW are friends now.",
+   "link": "https://umamusume.jp/character/naritataishin"
+  },
+  "mayano_top_gun": {
+   "umapyoi_id": 5088,
+   "game_id": 1024,
+   "name_en": "Mayano Top Gun",
+   "color_main": "#F57D38",
+   "color_sub": "#FFC845",
+   "birthday": {
+    "day": 24,
+    "month": 3
+   },
+   "sizes": {
+    "b": 75,
+    "w": 51,
+    "h": 73
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "マヤノトップガン",
+   "height": 143,
+   "shoe_size": "Both: 20.5cm",
+   "weight": "No fluctuation",
+   "grade": "Middle School",
+   "residence": "Ritto Dorm",
+   "slogan": "A sweet little sister. She can't wait to grow up!",
+   "profile": "Ehehe, I'm Mayachin!☆ I love thrilling and exciting things~ Nice to meetcha!",
+   "strengths": "Mostly anything and everything",
+   "weaknesses": "Hiding things",
+   "ears_fact": "She doesn't listen to things that she doesn't want to hear.",
+   "tail_fact": "It swishes around a lot when she lies.",
+   "family_fact": "Her father was a pilot, so the airport was her playground.",
+   "link": "https://umamusume.jp/character/mayanotopgun"
+  }
+ },
+ "npcs": {
+  "tazuna": {
+   "umapyoi_id": 5613,
+   "game_id": 9001,
+   "name_en": "Tazuna Hayakawa",
+   "color_main": "#44A705",
+   "color_sub": "#F3CD00",
+   "birthday": {
+    "day": 2,
+    "month": 5
+   },
+   "sizes": {
+    "b": null,
+    "w": null,
+    "h": null
+   },
+   "outfit": "Uniform",
+   "images": {
+    "icon": true,
+    "sprite": true
+   },
+   "name_jp": "駿川たづな",
+   "height": null,
+   "shoe_size": null,
+   "weight": null,
+   "grade": null,
+   "residence": null,
+   "slogan": "Secretary to the Tracen Academy President with a beautiful smile.",
+   "profile": "Hello, I am Tazuna Hayakawa, secretary to the president of Tracen Academy. I will continue to support you so that you can have a better school life.",
+   "strengths": null,
+   "weaknesses": null,
+   "ears_fact": null,
+   "tail_fact": null,
+   "family_fact": null,
+   "link": "https://umamusume.jp/character/hayakawatazuna"
+  },
+  "yayoi": {
+   "umapyoi_id": 5650,
+   "game_id": null,
+   "name_en": "Yayoi Akikawa",
+   "color_main": "#FC8056",
+   "color_sub": "#D1BDBA",
+   "birthday": {
+    "day": null,
+    "month": null
+   },
+   "sizes": {
+    "b": null,
+    "w": null,
+    "h": null
+   },
+   "outfit": "Uniform",
+   "images": {
+    "icon": true,
+    "sprite": true
+   },
+   "name_jp": "秋川やよい",
+   "height": null,
+   "shoe_size": null,
+   "weight": null,
+   "grade": null,
+   "residence": null,
+   "slogan": null,
+   "profile": null,
+   "strengths": null,
+   "weaknesses": null,
+   "ears_fact": null,
+   "tail_fact": null,
+   "family_fact": null,
+   "link": "https://umamusume.jp/character/akikawayayoi"
+  },
+  "etsuko": {
+   "umapyoi_id": 5668,
+   "game_id": 9003,
+   "name_en": "Etsuko Otonashi",
+   "color_main": "#4575bf",
+   "color_sub": "#986d64",
+   "birthday": {
+    "day": 3,
+    "month": 5
+   },
+   "sizes": {
+    "b": null,
+    "w": null,
+    "h": null
+   },
+   "outfit": "Default",
+   "images": {
+    "icon": true,
+    "sprite": true
+   },
+   "name_jp": "乙名史悦子",
+   "height": null,
+   "shoe_size": null,
+   "weight": null,
+   "grade": null,
+   "residence": null,
+   "slogan": null,
+   "profile": null,
+   "strengths": null,
+   "weaknesses": null,
+   "ears_fact": null,
+   "tail_fact": null,
+   "family_fact": null,
+   "link": "https://umamusume.jp/character/otonashietsuko"
+  }
+ }
+}

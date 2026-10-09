@@ -1,0 +1,10 @@
+[project]
+name = "umaworld"
+version = "1.0.0"
+description = "Jogo web single player com Chat Global em tempo real (FastAPI + WebSocket)."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning:starlette.*", "ignore:Using `httpx`"]

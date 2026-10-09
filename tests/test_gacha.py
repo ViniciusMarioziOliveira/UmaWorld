@@ -1,0 +1,237 @@
+from app import models as m
+from app.game import gacha
+from app.game.registry import chars_by
+
+from .conftest import StubRng
+
+
+def give_carats(player, amount=100_000):
+    def fn(db, user):
+        user.carats = amount
+    player.edit(fn)
+
+
+def set_wallet(player, tickets, carats):
+    def fn(db, user):
+        user.carats = carats
+        db.get(m.InventoryItem, (user.id, "ticket")).qty = tickets
+    player.edit(fn)
+
+
+def set_limited_pity(player, pity5):
+    def fn(db, user):
+        gacha.get_pity(db, user.id, "limited").pity5 = pity5
+    player.edit(fn)
+
+
+def banners_by_key(player):
+    return {b["key"]: b for b in player.get("/api/gacha").json()["banners"]}
+
+
+class PickLast(StubRng):
+    """Como o StubRng, mas o sorteio entre opções pega a última."""
+
+    def choice(self, seq):
+        return seq[-1]
+
+
+def test_chance_curve():
+    assert gacha.chance_5(1) == gacha.RATE_5
+    assert gacha.chance_5(73) == gacha.RATE_5
+    assert gacha.chance_5(74) > gacha.RATE_5
+    assert gacha.chance_5(90) == 1.0
+
+
+def test_hard_pity_and_50_50(player, monkeypatch):
+    """Com o sorteio sempre "azarado", o 5⭐ só vem no 90 e o 4⭐ a cada 10."""
+    monkeypatch.setattr(gacha, "rng", StubRng(0.99))
+    give_carats(player)
+    results = []
+    for _ in range(9):
+        res = player.post("/api/gacha/pull", {"banner": "limited", "count": 10})
+        assert res.status_code == 200, res.text
+        results += res.json()["results"]
+
+    # 10 tickets iniciais foram usados primeiro, depois carats.
+    assert [r["rarity"] for r in results[:10]] == [3] * 9 + [4]
+    assert all(r["rarity"] < 5 for r in results[:89])
+    last = results[89]
+    assert last["rarity"] == 5 and last["pity"] == 90
+    # 0.99 >= 0.5: perdeu o 50/50 -> veio uma 5⭐ do pool padrão e o próximo é garantido.
+    assert last["featured"] is False
+    assert last["character"]["pool"] == "standard"
+
+    banners = player.get("/api/gacha").json()["banners"]
+    limited = next(b for b in banners if b["type"] == "limited")
+    assert limited["pity"]["guaranteed"] is True
+    assert limited["pity"]["pity5"] == 0
+
+    # Próxima 5⭐ (forçada) tem que ser a destacada.
+    monkeypatch.setattr(gacha, "rng", StubRng(0.0))
+    res = player.post("/api/gacha/pull", {"banner": "limited", "count": 1}).json()
+    assert res["results"][0]["featured"] is True
+    assert res["results"][0]["character"]["id"] == limited["featured5"][0]["id"]
+
+
+def test_duo_banner_lineup():
+    banners = gacha.current_banners()
+    assert list(banners) == ["limited", "duo", "standard"]
+    duo = banners["duo"]
+    assert duo.type == "limited" and duo.ends_at is None
+    assert duo.featured5 == ["forever_young", "marche_lorraine"]
+    # As duas não entram na rotação semanal, e as 4★ em destaque são outras.
+    assert banners["limited"].featured5[0] not in duo.featured5
+    assert not set(duo.featured4) & set(banners["limited"].featured4)
+    pool5 = {c["id"] for c in gacha.banner_view(duo, None)["pool"]["five"]}
+    assert set(duo.featured5) <= pool5
+    assert not set(duo.featured5) & {c["id"] for c in chars_by(5, "standard")}
+
+
+def test_duo_banner_50_50_and_guarantee(player, monkeypatch):
+    """Perdeu o 50/50: a garantia entrega uma das duas destacadas, sorteada entre elas."""
+    give_carats(player)
+    monkeypatch.setattr(gacha, "rng", StubRng(0.99))  # 5★ só no hard pity, e perde o 50/50
+    set_limited_pity(player, 89)
+    lost = player.post("/api/gacha/pull", {"banner": "duo", "count": 1}).json()["results"][0]
+    assert lost["rarity"] == 5 and lost["featured"] is False
+    assert lost["character"]["pool"] == "standard"
+    assert banners_by_key(player)["duo"]["pity"]["guaranteed"] is True
+
+    monkeypatch.setattr(gacha, "rng", PickLast(0.99))
+    set_limited_pity(player, 89)
+    won = player.post("/api/gacha/pull", {"banner": "duo", "count": 1}).json()["results"][0]
+    assert won["featured"] is True and won["character"]["id"] == "marche_lorraine"
+    assert banners_by_key(player)["duo"]["pity"]["guaranteed"] is False
+
+    monkeypatch.setattr(gacha, "rng", StubRng(0.0))  # 5★ na hora e ganha o 50/50
+    lucky = player.post("/api/gacha/pull", {"banner": "duo", "count": 1}).json()["results"][0]
+    assert lucky["featured"] is True and lucky["character"]["id"] == "forever_young"
+
+    history = player.get("/api/gacha/history", params={"rarity": 5}).json()["items"]
+    assert [i["banner_label"] for i in history] == ["Dupla Estelar"] * 3
+
+
+def test_limited_banners_share_pity_and_guarantee(player, monkeypatch):
+    give_carats(player)
+    monkeypatch.setattr(gacha, "rng", StubRng(0.99))
+    assert player.post("/api/gacha/pull", {"banner": "limited", "count": 3}).status_code == 200
+    assert banners_by_key(player)["duo"]["pity"]["pity5"] == 3
+    assert player.post("/api/gacha/pull", {"banner": "duo", "count": 2}).status_code == 200
+    banners = banners_by_key(player)
+    assert banners["limited"]["pity"]["pity5"] == 5
+    assert banners["standard"]["pity"]["pity5"] == 0
+
+    # A garantia ganha no Holofote vale na Dupla Estelar.
+    set_limited_pity(player, 89)
+    lost = player.post("/api/gacha/pull", {"banner": "limited", "count": 1}).json()["results"][0]
+    assert lost["featured"] is False
+    set_limited_pity(player, 89)
+    won = player.post("/api/gacha/pull", {"banner": "duo", "count": 1}).json()["results"][0]
+    assert won["featured"] is True and won["character"]["id"] in ("forever_young", "marche_lorraine")
+
+
+def test_outdated_page_is_asked_to_reload(player):
+    """Uma tela antiga manda "banner_type", que não diz qual dos banners limitados ela mostra.
+    Em vez de puxar no banner errado, o servidor pede para recarregar e não cobra nada."""
+    res = player.post("/api/gacha/pull", {"banner_type": "limited", "count": 1})
+    assert res.status_code == 400
+    assert "Recarregue" in res.json()["detail"]
+    assert player.get("/api/gacha/history").json()["total"] == 0
+    assert player.post("/api/gacha/pull", {"banner": "outro", "count": 1}).status_code == 422
+
+
+def test_pull_requires_currency(player):
+    def fn(db, user):
+        user.carats = 0
+    player.edit(fn)
+    # Ainda tem 10 tickets: 10x funciona, o próximo 1x não.
+    assert player.post("/api/gacha/pull", {"banner": "standard", "count": 10}).status_code == 200
+    res = player.post("/api/gacha/pull", {"banner": "standard", "count": 1})
+    assert res.status_code == 400
+    assert "ticket" in res.json()["detail"]
+
+
+def test_ten_pull_mixes_tickets_and_carats(player):
+    """6 tickets + 4 pulls em carats fecham um 10x."""
+    set_wallet(player, tickets=6, carats=1_000)
+    res = player.post("/api/gacha/pull", {"banner": "standard", "count": 10})
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert len(body["results"]) == 10
+    assert body["paid"] == {"tickets": 6, "carats": 4 * gacha.PULL_COST_CARATS}
+    assert body["me"]["tickets"] == 0
+    assert body["me"]["carats"] == 1_000 - 4 * gacha.PULL_COST_CARATS
+
+
+def test_pull_all_tickets_at_once(player):
+    """Com 6 tickets dá para fazer um 6x sem gastar carats."""
+    set_wallet(player, tickets=6, carats=0)
+    res = player.post("/api/gacha/pull", {"banner": "limited", "count": 6})
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert len(body["results"]) == 6
+    assert body["paid"] == {"tickets": 6, "carats": 0}
+    assert body["me"]["tickets"] == 0
+    assert player.get("/api/gacha/history").json()["total"] == 6
+
+
+def test_mixed_payment_short_on_carats_spends_nothing(player):
+    set_wallet(player, tickets=6, carats=4 * gacha.PULL_COST_CARATS - 1)
+    res = player.post("/api/gacha/pull", {"banner": "standard", "count": 10})
+    assert res.status_code == 400
+    assert "6 ticket(s)" in res.json()["detail"]
+    me = player.get("/api/me").json()["me"]
+    assert me["tickets"] == 6 and me["carats"] == 4 * gacha.PULL_COST_CARATS - 1
+    assert player.get("/api/gacha/history").json()["total"] == 0
+
+
+def test_pull_count_limits(player):
+    for count in (0, 11):
+        res = player.post("/api/gacha/pull", {"banner": "standard", "count": count})
+        assert res.status_code == 422
+        assert "1 a 10" in res.json()["detail"]
+
+
+def test_duplicates_awaken_then_fragments(player, monkeypatch):
+    monkeypatch.setattr(gacha, "rng", StubRng(0.99))  # sempre a 1ª 3⭐ da lista
+    give_carats(player)
+    first3 = chars_by(3)[0]["id"]
+    outcomes = []
+    for _ in range(8):
+        res = player.post("/api/gacha/pull", {"banner": "standard", "count": 1}).json()
+        r = res["results"][0]
+        if r["character"]["id"] == first3:
+            outcomes.append(r["outcome"])
+    # Haru Urara é a personagem inicial, então já começa como cópia.
+    assert outcomes[:5] == ["awakening"] * 5
+    assert outcomes[5:] == ["fragments"] * (len(outcomes) - 5)
+
+
+def test_feed_broadcast_over_websocket(client, player, monkeypatch):
+    monkeypatch.setattr(gacha, "rng", StubRng(0.0))  # 5⭐ em todo pull
+    with client.websocket_connect(f"/ws?token={player.token}") as ws:
+        hello = ws.receive_json()
+        while hello["type"] != "hello":
+            hello = ws.receive_json()
+        assert any(p["nickname"] == player.nickname for p in hello["online"])
+
+        res = player.post("/api/gacha/pull", {"banner": "limited", "count": 1})
+        assert res.status_code == 200
+
+        for _ in range(20):
+            msg = ws.receive_json()
+            if msg["type"] == "feed" and msg["event"]["kind"] == "five_star":
+                break
+        else:
+            raise AssertionError("evento 5⭐ não chegou pelo WebSocket")
+        assert msg["event"]["nickname"] == player.nickname
+        assert "[5★" in msg["event"]["message"] and "com 1 pity" in msg["event"]["message"]
+
+
+def test_history_pagination(player):
+    player.post("/api/gacha/pull", {"banner": "standard", "count": 10})
+    hist = player.get("/api/gacha/history").json()
+    assert hist["total"] == 10
+    assert len(hist["items"]) == 10
+    only4 = player.get("/api/gacha/history", params={"rarity": 4}).json()
+    assert all(i["rarity"] == 4 for i in only4["items"])
