@@ -24,6 +24,11 @@ class PullIn(BaseModel):
     count: int = Field(ge=1, le=10)
 
 
+class ExchangeIn(BaseModel):
+    banner: Literal["limited", "duo", "standard"]
+    character: str = Field(max_length=40)
+
+
 class LevelIn(BaseModel):
     manuals: dict[str, Annotated[int, Field(ge=0, le=9999)]] = Field(default_factory=dict, max_length=3)
 

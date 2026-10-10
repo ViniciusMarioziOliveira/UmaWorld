@@ -5,10 +5,11 @@ from sqlalchemy.orm import Session
 
 from .. import models as m
 from ..database import get_db
-from ..game import training
+from ..game import catalog, training
 from ..game.clock import iso
-from ..game.registry import CHAR_INFO, ITEM_INFO, char_public, item_public
-from ..game.rewards import GameError, get_qty
+from ..game.feed import fmt
+from ..game.registry import CHAR_INFO, ITEM_INFO, MISSIONS, char_public, item_public
+from ..game.rewards import CURRENCIES, GameError, get_qty
 from ..game.serializers import avatar_view, public_user, uc_view
 from ..realtime import hub
 from ..schemas import ProfileIn
@@ -16,6 +17,15 @@ from ..security import current_user, locked_user
 from .common import done
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
+
+# De onde vem cada cosmético (Loja ou conquista), para quem ainda não tem saber como conseguir.
+COSMETIC_SOURCES: dict[str, list[str]] = {}
+for _oid, _tab, _rewards, _currency, _price, _period, _limit in catalog.SHOP_OFFERS:
+    for _item in _rewards.get("items", {}):
+        COSMETIC_SOURCES.setdefault(_item, []).append(f"Loja: {fmt(_price)} {CURRENCIES[_currency][0]}")
+for _mission in MISSIONS:
+    for _item in _mission.rewards.get("items", {}):
+        COSMETIC_SOURCES.setdefault(_item, []).append(f"Conquista: {_mission.title}")
 
 
 @router.get("/{nickname}")
@@ -71,9 +81,11 @@ def profile(nickname: str, viewer: m.User = Depends(current_user), db: Session =
         ],
     }
     if data["is_me"]:
+        # Todos os títulos e molduras do jogo, com os que o jogador tem marcados (o inventário
+        # inteiro vem numa consulta só). A tela mostra os que faltam com o caminho para consegui-los.
         data["cosmetics"] = {
-            cat: [item_public(i) for i, info in ITEM_INFO.items()
-                  if info["category"] == cat and get_qty(db, user.id, i) > 0]
+            cat: [{**item_public(i), "owned": get_qty(db, user.id, i) > 0, "sources": COSMETIC_SOURCES.get(i, [])}
+                  for i, info in ITEM_INFO.items() if info["category"] == cat]
             for cat in ("title", "frame")
         }
         data["roster"] = [uc_view(uc) for uc in roster]

@@ -207,17 +207,20 @@ export async function render(el, _params, ctx) {
   const pick = (lines) => lines[Math.floor(Math.random() * lines.length)];
 
   // Cada Uma fala as suas falas em ordem; a Fukukitaru "prevê" a destacada da semana.
+  // As Umas da Dupla Estelar só levam ao banner enquanto ele está aberto.
+  const talksOff = (u) => u.talk === 'duo' && !duo;
   const nextLine = new Map();
   function umaLine(u) {
-    const i = nextLine.get(u.id) || 0;
-    nextLine.set(u.id, (i + 1) % u.lines.length);
-    return u.lines[i].replace('{featured}', featured ? featured.name : 'a destacada da semana');
+    const lines = talksOff(u) ? u.linesOff : u.lines;
+    const i = (nextLine.get(u.id) || 0) % lines.length;
+    nextLine.set(u.id, (i + 1) % lines.length);
+    return lines[i].replace('{featured}', featured ? featured.name : 'a destacada da semana');
   }
   function greet(u) {
     const walker = npcWalker(u.id);
     const lookalike = me.avatar?.character?.id === u.id;
     emote(walker, u.emote);
-    say(walker, esc(lookalike ? 'Ei... você é a minha cara! Será que é um espelho?' : u.greet), 3800);
+    say(walker, esc(lookalike ? 'Ei... você é a minha cara! Será que é um espelho?' : talksOff(u) ? u.greetOff : u.greet), 3800);
   }
 
   function goToRoute(route) {
@@ -237,7 +240,7 @@ export async function render(el, _params, ctx) {
         say(npcWalker(n.id), esc(pick(n.lines)), 1600);
         setTimeout(() => { if (ctx.alive) goToRoute('praca'); }, 900);
       } else if (n.talk === 'news') {
-        const lastNews = [...live.events].reverse().find((e) => ['five_star', 'milestone', 'rank_up'].includes(e.kind));
+        const lastNews = [...live.events].reverse().find((e) => ['six_star', 'five_star', 'exchange', 'milestone', 'rank_up'].includes(e.kind));
         say(npcWalker(n.id), lastNews
           ? `Última notícia: ${lastNews.nickname ? `<b>${esc(lastNews.nickname)}</b> ` : ''}${formatFeed(lastNews.message)}`
           : esc(pick(n.lines)), 6000);
@@ -248,8 +251,8 @@ export async function render(el, _params, ctx) {
       const u = near.uma;
       engine.hop(u.id);
       say(npcWalker(u.id), esc(umaLine(u)), 4800);
-      // A Forever Young e a Marche Lorraine levam até o banner delas.
-      if (u.talk === 'duo') setTimeout(() => { if (ctx.alive) goToRoute('gacha/duo'); }, 1600);
+      // A Forever Young e a Marche Lorraine levam até o banner delas (enquanto ele está aberto).
+      if (u.talk === 'duo' && duo) setTimeout(() => { if (ctx.alive) goToRoute('gacha/duo'); }, 1600);
     }
   }
 

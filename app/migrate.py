@@ -10,6 +10,7 @@ from sqlalchemy.engine import Connection, Engine
 
 from . import models  # noqa: F401  (registra as tabelas no metadata)
 from .database import Base, SessionLocal, engine
+from .game.gacha import SPARK_COST
 from .game.seed import seed
 
 log = logging.getLogger("umaworld.migrate")
@@ -26,10 +27,20 @@ def migrate(conn: Connection, tables: set[str]) -> None:
     if "users" not in tables:
         return  # banco novo: create_all cria tudo no formato atual
 
-    user_columns = {c["name"] for c in inspect(conn).get_columns("users")}
-    if "avatar_character_id" not in user_columns:
+    # As colunas das duas tabelas numa leitura só (cada ida ao banco conta na inicialização).
+    columns = {table: {c["name"] for c in cols} for (_, table), cols in
+               inspect(conn).get_multi_columns(filter_names=["users", "pity"]).items()}
+    if "avatar_character_id" not in columns["users"]:
         conn.execute(text("ALTER TABLE users ADD COLUMN avatar_character_id VARCHAR(40)"))
         log.info("Coluna users.avatar_character_id criada.")
+
+    if "pity" in columns and "spark" not in columns["pity"]:
+        conn.execute(text("ALTER TABLE pity ADD COLUMN spark INTEGER NOT NULL DEFAULT 0"))
+        conn.execute(text("ALTER TABLE pity ADD COLUMN exchanges INTEGER NOT NULL DEFAULT 0"))
+        # Os pulls feitos antes da troca existir também contam, até uma troca.
+        conn.execute(text("UPDATE pity SET spark = CASE WHEN total > :cost THEN :cost ELSE total END"),
+                     {"cost": SPARK_COST})
+        log.info("Colunas pity.spark e pity.exchanges criadas.")
 
     if conn.dialect.name == "postgresql":
         # SQLite não limita VARCHAR; no PostgreSQL as colunas de ícone precisam crescer.

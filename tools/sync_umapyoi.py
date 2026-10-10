@@ -1,8 +1,9 @@
 """Sincroniza dados e imagens das personagens a partir da API pública do umapyoi.net.
 
 Uso:
-    python -m tools.sync_umapyoi           # baixa só o que falta
-    python -m tools.sync_umapyoi --force   # baixa tudo de novo
+    python -m tools.sync_umapyoi                       # baixa só o que falta
+    python -m tools.sync_umapyoi --force               # baixa tudo de novo
+    python -m tools.sync_umapyoi --only mejiro_ramonu  # só estas personagens (o resto fica como está)
 
 Gera arquivos locais (o jogo NUNCA chama o umapyoi em tempo de execução):
     app/game/data/umas.json            dados oficiais (perfil, cores, aniversário...)
@@ -142,7 +143,12 @@ def sync_one(our_id: str, entry: dict, wanted: tuple[str, ...], force: bool) -> 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--force", action="store_true", help="baixa todas as imagens de novo")
+    parser.add_argument("--only", nargs="+", metavar="ID", help="sincroniza só estas personagens (ids do catalog.py)")
     args = parser.parse_args()
+    known = {row[0] for row in CHARACTERS}
+    if args.only and not set(args.only) <= known:
+        print(f"Ids fora do catalog.py: {sorted(set(args.only) - known)}")
+        return 1
 
     print("Buscando a lista de personagens no umapyoi.net…")
     listing = api("character/list")
@@ -155,9 +161,14 @@ def main() -> int:
         "characters": {},
         "npcs": {},
     }
+    if args.only:  # parte do arquivo atual: as outras personagens e os NPCs não mudam
+        current = json.loads(DATA_OUT.read_text(encoding="utf-8"))
+        out["characters"], out["npcs"] = current["characters"], current["npcs"]
     missing = []
     for row in CHARACTERS:
         our_id = row[0]
+        if args.only and our_id not in args.only:
+            continue
         entry = by_internal.get(our_id.replace("_", ""))
         if entry is None:
             missing.append(our_id)
@@ -166,12 +177,16 @@ def main() -> int:
         out["characters"][our_id] = sync_one(our_id, entry, tuple(IMAGES), args.force)
 
     for npc_id, internal in NPCS.items():
+        if args.only:
+            break
         entry = by_internal.get(internal)
         if entry is None:
             missing.append(npc_id)
             continue
         print(f" - NPC {entry['name_en']}")
         out["npcs"][npc_id] = sync_one(f"npc_{npc_id}", entry, NPC_IMAGES, args.force)
+    # Mesma ordem do catalog.py, com ou sem --only.
+    out["characters"] = {row[0]: out["characters"][row[0]] for row in CHARACTERS if row[0] in out["characters"]}
 
     DATA_OUT.parent.mkdir(parents=True, exist_ok=True)
     DATA_OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")

@@ -23,7 +23,7 @@
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&logo=css&logoColor=white" alt="CSS">
   <img src="https://img.shields.io/badge/SVG-FFB13B?style=for-the-badge&logo=svg&logoColor=black" alt="SVG">
-  <img src="https://img.shields.io/badge/pytest-43%20testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest: 43 testes">
+  <img src="https://img.shields.io/badge/pytest-54%20testes-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="pytest: 54 testes">
   <img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render">
 </p>
 
@@ -76,11 +76,12 @@ Fora da cerca fica a **Pista de Corrida**, com grama, areia, arquibancada, port�
   <img src="docs/img/revelacao.webp" width="720" alt="Animação de um recrutamento 10x: o bilhete brilha em cromado holográfico, é rasgado, as cartas aparecem e a Marche Lorraine 5★ sai da carta">
 </p>
 
-- **Três banners:** o **Holofote** é limitado e troca toda semana. A **Dupla Estelar** é limitada e tem duas 5★ em destaque, a Forever Young e a Marche Lorraine. A **Corrida das Lendas** é o banner permanente.
+- **Três banners:** o **Holofote** é limitado e troca toda semana. A **Dupla Estelar** é limitada, fica 21 dias no ar e tem duas 5★ em destaque, a Forever Young e a Marche Lorraine. Depois ela some do Templo, pronta para uma reprise. A **Corrida das Lendas** é o banner permanente.
 - **Regras de gacha de verdade:**
   - pity de 90, com pity suave a partir do 74;
   - 4★ garantida a cada 10 pulls;
   - regra 50/50 com garantia, compartilhada entre os dois banners limitados.
+- **Troca de 200 pulls:** nos limitados, a cada 200 pulls você escolhe uma 5★ em destaque, quantas vezes quiser. No permanente, a troca vale uma vez por conta, e depois o seletor some.
 - **De 1 a 10 pulls por vez:** os tickets são gastos primeiro, e o que faltar sai em carats.
 - **A revelação:** você rasga um bilhete, e a luz do picote já mostra a maior raridade: azul, roxa ou cromado holográfico na 5★. Depois as cartas viram uma a uma, e a arte da 5★ sai da própria carta.
 
@@ -105,12 +106,14 @@ Fora da cerca fica a **Pista de Corrida**, com grama, areia, arquibancada, port�
   </tr>
   <tr>
     <td align="center"><b>Centro de Treinamento</b><br>Nível, atributos, habilidades, ascensão, equipamento e a ficha oficial de cada Uma.</td>
-    <td align="center"><b>Sua Casa</b><br>Título, moldura, favoritas, estatísticas, conquistas e a coleção completa.</td>
-    <td align="center"><b>Fazenda</b><br>Produz recursos enquanto você está fora. As ajudantes aumentam a produção.</td>
+    <td align="center"><b>Sua Casa</b><br>Título, moldura desenhada (grama de pista, cerejeira, céu estrelado ou louros dourados), favoritas, estatísticas, conquistas e a coleção completa.</td>
+    <td align="center"><b>Fazenda</b><br>Produz recursos enquanto você está fora. As ajudantes aumentam a produção, e cada hora colhida pode trazer uma visitante rara.</td>
   </tr>
 </table>
 
-Também tem **Missões** diárias, semanais e conquistas, uma **Loja** com limites por período e cosméticos, o **Armazém** com tudo o que você tem e o **Hall da Fama**, com rankings por nível, poder, pulls, coleção e 5★. Ao todo são **36 Umas** para colecionar.
+- **Visitante rara:** a **Mejiro Ramonu**, a única 6★, não sai em nenhum banner. Cada hora de produção da Fazenda é uma chance de 0,5% de ela aparecer na colheita, e de 1% nas horas de sábado e domingo. Quando ela vem, uma flor acende seis estrelas e desabrocha numa chuva de pétalas.
+
+Também tem **Missões** diárias, semanais e conquistas, uma **Loja** com limites por período e cosméticos, o **Armazém** com tudo o que você tem e o **Hall da Fama**, com rankings por nível, poder, pulls, coleção e 5★. Ao todo são **37 Umas** para colecionar.
 
 ### Funciona no celular
 
@@ -134,7 +137,7 @@ No celular, o menu vai para a parte de baixo da tela, o minimapa começa fechado
 | Login | **bcrypt** e **JWT** | Apelido e senha, sem e-mail |
 | Frontend | **HTML**, **CSS** e **JavaScript** puro (ES modules) | Interface sem framework e sem etapa de build |
 | Mundo | **SVG** desenhado em código e um motor próprio | Movimento, colisão, A\*, câmera com zoom e o andar das corredoras |
-| Testes | **pytest** | 43 testes de gacha, economia, WebSocket, banco e desempenho |
+| Testes | **pytest** | 54 testes de gacha, economia, WebSocket, banco e desempenho |
 | Hospedagem | **Render** (`render.yaml`) | Deploy pronto, com o banco no Supabase |
 
 ## Por baixo do capô
@@ -169,7 +172,7 @@ Abra **http://127.0.0.1:8000** e crie uma conta. Sem nenhuma configuração, o j
 Para ver a Praça com outros jogadores e o Chat Global ao vivo, abra uma segunda janela anônima e entre com outra conta.
 
 ```powershell
-pytest    # 43 testes; sempre usam um SQLite temporário
+pytest    # 54 testes; sempre usam um SQLite temporário
 ```
 
 ## Créditos

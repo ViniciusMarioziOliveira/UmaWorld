@@ -4,6 +4,7 @@ Para adicionar uma personagem, item, missão ou oferta, basta editar as listas a
 e reiniciar o servidor — o seed faz upsert pelo id.
 """
 import hashlib
+from datetime import date, timedelta
 
 STATS = ("speed", "stamina", "power", "guts", "wit")
 STAT_LABELS = {
@@ -23,6 +24,9 @@ STYLE_LABELS = {
 
 # id, nome, raridade, distância, estilo, cor, pool, habilidade única, descrição
 CHARACTERS = [
+    # 6★: só aparece na colheita da Fazenda (afk.RARE_VISITOR), nunca nos banners nem na Loja
+    ("mejiro_ramonu", "Mejiro Ramonu", 6, "media", "intermediaria", "#4bb6af", "farm",
+     "Flor Sem Rival", "Desabrocha sozinha no topo: elegância que acelera na reta final."),
     # 5★ do banner padrão (também aparecem quando se perde o 50/50)
     ("special_week", "Special Week", 5, "media", "intermediaria", "#e0569b", "standard",
      "Estrela Cadente", "Arrancada decisiva nos metros finais."),
@@ -107,6 +111,15 @@ STARTER_CHARACTER = "haru_urara"
 # Dupla Estelar: banner limitado com duas 5★ em destaque, aberto ao lado do Holofote da
 # semana (id, nome, destaques). As duas ficam fora da rotação semanal.
 DUO_BANNER = ("dupla-estelar", "Dupla Estelar", ("forever_young", "marche_lorraine"))
+# Quando ela fica aberta: (primeiro dia, no fuso do jogo, e quantos dias). Fora desses períodos o
+# banner some do Templo da Sorte, mas nada é apagado. Para um rerun, acrescente outro período.
+DUO_BANNER_RUNS = [(date(2026, 10, 8), 21)]
+
+
+def last_day(run: tuple[date, int]) -> date:
+    """Último dia aberto de um período (o banner fecha à meia-noite do dia seguinte)."""
+    start, days = run
+    return start + timedelta(days=days - 1)
 
 # Habilidade genérica (slot 2) de cada personagem, conforme a distância.
 GENERIC_SKILLS = {
@@ -115,7 +128,7 @@ GENERIC_SKILLS = {
     "media": ("folego_calculado", "Fôlego Calculado", "Administra a energia em distâncias médias."),
     "longa": ("coracao_maratonista", "Coração de Maratonista", "Recupera fôlego em provas longas."),
 }
-UNIQUE_SKILL_BONUS = {3: 0.025, 4: 0.03, 5: 0.04}
+UNIQUE_SKILL_BONUS = {3: 0.025, 4: 0.03, 5: 0.04, 6: 0.05}
 GENERIC_SKILL_BONUS = 0.02
 
 _DIST_WEIGHTS = {
@@ -125,7 +138,7 @@ _DIST_WEIGHTS = {
     "longa": {"speed": 1.0, "stamina": 1.35, "power": 0.9, "guts": 0.9, "wit": 0.85},
 }
 _STYLE_STAT = {"lider": "speed", "perseguidora": "wit", "intermediaria": "power", "arremetida": "guts"}
-_RARITY_TOTAL = {3: 360, 4: 430, 5: 510}
+_RARITY_TOTAL = {3: 360, 4: 430, 5: 510, 6: 590}
 
 
 def base_stats(char_id: str, rarity: int, distance: str, style: str) -> dict[str, int]:
@@ -306,6 +319,14 @@ ANNOUNCEMENTS = [
      "UmaWorld é um projeto de fã, sem fins lucrativos. Uma Musume Pretty Derby © Cygames, Inc. "
      "Dados e artes via umapyoi.net.", False),
     (4, "sparkle", "Novo banner: Dupla Estelar",
-     "Forever Young e Marche Lorraine chegaram ao Templo da Sorte, as duas 5★ em destaque no mesmo banner. "
-     "Vale o 50/50 de sempre, e o pity e a garantia são os mesmos do Holofote da semana.", False),
+     "Forever Young e Marche Lorraine chegaram ao Templo da Sorte, as duas 5★ em destaque no mesmo banner, "
+     f"até {last_day(DUO_BANNER_RUNS[-1]):%d/%m}. Vale o 50/50 de sempre, e o pity e a garantia são os mesmos "
+     "do Holofote da semana.", False),
+    (5, "exchange", "Troca de 200 pulls",
+     "A cada 200 pulls nos banners limitados, troque os pulls por uma das 5★ em destaque, quantas vezes quiser. "
+     "No banner padrão a troca vale uma vez por conta: ao chegar em 200 pulls, escolha uma 5★ do pool padrão.",
+     False),
+    (6, "flower", "Visitante rara na Fazenda",
+     "Mejiro Ramonu, a primeira 6★ do UmaWorld, pode aparecer na colheita: cada hora de produção é uma chance "
+     "de 0,5%, e de 1% nas horas de sábado e domingo. Ela não sai em nenhum banner.", False),
 ]

@@ -9,11 +9,15 @@ from contextlib import contextmanager
 
 from sqlalchemy import event
 
+from datetime import timedelta
+
+from app import models as m
 from app.database import engine
-from app.game import gacha
+from app.game import afk, gacha
+from app.game.clock import utcnow
 
 from .conftest import StubRng
-from .test_gacha import give_carats
+from .test_gacha import give_carats, set_spark
 
 
 @contextmanager
@@ -46,8 +50,43 @@ def test_pull_reads_do_not_grow_with_count(player, monkeypatch):
 def test_screens_read_little(player):
     counts = {}
     for url in ("/api/me", "/api/hub", "/api/gacha", "/api/missions", "/api/shop", "/api/characters",
-                f"/api/profile/{player.nickname}", "/api/inventory"):
+                f"/api/profile/{player.nickname}", "/api/inventory", "/api/afk"):
         with reads() as n:
             assert player.get(url).status_code == 200
         counts[url] = n[0]
     assert all(n <= 8 for n in counts.values()), counts
+
+
+def test_exchange_reads_little(player):
+    set_spark(player, "standard", 200)
+    with reads() as screen:  # com a troca pronta, a tela também lê a coleção (nova ou despertar)
+        assert player.get("/api/gacha").status_code == 200
+    with reads() as n:
+        res = player.post("/api/gacha/exchange", {"banner": "standard", "character": "special_week"})
+        assert res.status_code == 200, res.text
+    assert screen[0] <= 8 and n[0] <= 8, (screen[0], n[0])
+
+
+def test_farm_collect_reads_do_not_grow_with_hours(player, monkeypatch):
+    """O sorteio da visitante rara é feito na memória: 8 horas não leem mais que 1."""
+    def wait(hours):
+        def fn(db, user):
+            db.get(m.Farm, user.id).last_collected_at = utcnow() - timedelta(hours=hours)
+        player.edit(fn)
+
+    wait(1)
+    with reads() as one:
+        assert player.post("/api/afk/collect").status_code == 200
+    wait(8)
+    with reads() as eight:
+        assert player.post("/api/afk/collect").status_code == 200
+    assert eight[0] == one[0] and one[0] <= 8, (one[0], eight[0])
+
+    # Com a visitante (0,5% por hora): a coleção e o catálogo são lidos uma vez, para ela entrar no
+    # estábulo. Oito visitas na mesma colheita custam o mesmo que uma.
+    monkeypatch.setattr(afk, "rng", StubRng(0.0))
+    wait(8)
+    with reads() as lucky:
+        res = player.post("/api/afk/collect")
+        assert len(res.json()["rare"]) == 8
+    assert lucky[0] <= one[0] + 3, (one[0], lucky[0])

@@ -1,10 +1,14 @@
 // Fazenda (Farm AFK): produção ao vivo (calculada no cliente a partir das taxas do servidor),
-// coleta, ajudantes e melhorias.
+// coleta, ajudantes, melhorias e a visitante rara (6★) que pode aparecer na colheita.
 
 import { api, state } from '../store.js';
 import {
-  act, bar, charCard, duration, esc, fmt, icon, money, openModal, panelTitle, portrait, rewardChips, toast, viewHead,
+  act, bar, charCard, duration, esc, fmt, icon, money, openModal, panelTitle, portrait, rewardChips, stars, toast,
+  umaImg, viewHead,
 } from '../ui.js';
+import { openSpotlight } from '../gacha/spotlight.js';
+
+const pct = (p) => `${(p * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
 
 export async function render(el, _params, ctx) {
   let farm = await api.get('/api/afk');
@@ -26,7 +30,32 @@ export async function render(el, _params, ctx) {
       full: elapsed >= farm.storage_hours,
       ready: elapsed * 60 >= farm.min_collect_minutes,
       pending: farm.resources.map((r) => ({ ...r, now: r.rate * effective + r.carry })),
+      chances: Math.floor(farm.rare.carry + effective + 1e-9), // igual ao servidor: uma por hora inteira
     };
+  }
+
+  function rareHtml() {
+    const r = farm.rare;
+    const c = r.character;
+    return `
+      <section class="panel rare-panel ${r.owned ? 'found' : ''}" style="--c:${esc(c.color)};--c2:${esc(c.color2 || c.color)}">
+        <div class="rare-art" aria-hidden="true">
+          ${c.img ? `<img src="${umaImg(c.id, 'full')}" alt="" loading="lazy" decoding="async">` : portrait(c, 120)}
+        </div>
+        <div class="rare-info">
+          <div class="row" style="gap:8px">${stars(6)}<span class="chip chip-teal">${icon('flower')}Visitante rara</span></div>
+          <h3>${esc(c.name)}</h3>
+          <p class="small">Ela só aparece aqui, na colheita. Cada hora de produção é uma chance de <strong>${pct(r.chance)}</strong>,
+            sorteada à parte, e de <strong>${pct(r.chance_weekend)}</strong> nas horas de sábado e domingo.</p>
+          <div class="rare-odds">
+            <span class="chip ${r.weekend_now ? 'chip-gold' : ''}">${icon('calendar')}${r.weekend_now
+              ? `Fim de semana: ${pct(r.chance_weekend)} por hora` : `Agora: ${pct(r.chance)} por hora`}</span>
+            <span class="chip">${icon('dice')}<span><strong data-rare-chances>0</strong> chance(s) nesta colheita</span></span>
+          </div>
+          ${r.owned ? `<a class="small bold" href="#/treino/${r.user_character_id}">${icon('check')}No seu estábulo · Despertar ${r.awakening}/5</a>`
+            : `<span class="small muted">${icon('lock')} Ainda não apareceu para você.</span>`}
+        </div>
+      </section>`;
   }
 
   function sceneHtml() {
@@ -76,6 +105,8 @@ export async function render(el, _params, ctx) {
       const node = el.querySelector(`[data-res="${r.key}"]`);
       if (node) node.textContent = fmt(Math.floor(r.now));
     });
+    const chances = el.querySelector('[data-rare-chances]');
+    if (chances) chances.textContent = fmt(s.chances);
   }
 
   function helpersHtml() {
@@ -121,13 +152,14 @@ export async function render(el, _params, ctx) {
   el.innerHTML = `
     ${viewHead({ icon: 'farm', tone: 'gold', title: 'Fazenda', sub: 'A fazenda produz enquanto você está fora. Volte para coletar antes que o armazém encha!' })}
     <div data-scene>${sceneHtml()}</div>
+    <div data-rare>${rareHtml()}</div>
     <section class="panel">
       ${panelTitle('basket', 'Pronto para coletar', 'valores atualizados ao vivo')}
       <div class="res-grid" data-resources>${resourcesHtml()}</div>
     </section>
     <div class="grid-2">
       <section class="panel">
-        ${panelTitle('horse', 'Ajudantes', '5★ +15% · 4★ +10% · 3★ +5% (+ nível/10 %)')}
+        ${panelTitle('horse', 'Ajudantes', '6★ +20% · 5★ +15% · 4★ +10% · 3★ +5% (+ nível/10 %)')}
         <div class="helper-slots" data-helpers>${helpersHtml()}</div>
       </section>
       <section class="panel">
@@ -138,13 +170,20 @@ export async function render(el, _params, ctx) {
 
   const drawAll = () => {
     el.querySelector('[data-scene]').innerHTML = sceneHtml();
+    el.querySelector('[data-rare]').innerHTML = rareHtml();
     el.querySelector('[data-resources]').innerHTML = resourcesHtml();
     el.querySelector('[data-helpers]').innerHTML = helpersHtml();
     el.querySelector('[data-upgrades]').innerHTML = upgradesHtml();
     tick();
   };
 
-  function showCollected(list, title = 'Colheita concluída!') {
+  /** A visitante rara primeiro (com a animação da 6★), depois o que foi colhido. */
+  async function showCollected(res, title = 'Colheita concluída!') {
+    for (const visit of res.rare || []) {
+      await openSpotlight(visit, { kind: 'bloom' });
+      if (!ctx.alive) return;
+    }
+    const list = res.collected || [];
     if (!list.length) return;
     toast(`${icon('basket')}<span>${esc(title)}</span>`, 'success');
     openModal({ title, icon: 'basket', tone: 'gold', body: rewardChips(list),
@@ -179,7 +218,7 @@ export async function render(el, _params, ctx) {
       modal.close();
       sync(out.farm);
       drawAll();
-      showCollected(out.collected, 'Produção anterior coletada');
+      showCollected(out, 'Produção anterior coletada');
     });
   }
 
@@ -192,7 +231,7 @@ export async function render(el, _params, ctx) {
       if (!res || !ctx.alive) return;
       sync(res.farm);
       drawAll();
-      showCollected(res.collected);
+      showCollected(res);
       return;
     }
     const up = e.target.closest('[data-upgrade]');
@@ -202,7 +241,7 @@ export async function render(el, _params, ctx) {
       sync(res.farm);
       drawAll();
       toast(`${icon('hammer')}<span>${up.dataset.upgrade === 'farm' ? `Fazenda agora no Nv. ${farm.level}!` : `Armazém agora guarda ${farm.storage_hours}h!`}</span>`, 'success');
-      if (res.collected.length) showCollected(res.collected, 'Produção anterior coletada');
+      showCollected(res, 'Produção anterior coletada');
       return;
     }
     const slot = e.target.closest('[data-slot]');

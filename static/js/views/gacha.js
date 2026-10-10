@@ -2,9 +2,11 @@
 
 import { api, onState, state } from '../store.js';
 import {
-  act, bar, countdown, esc, fmt, fullArt, icon, money, openModal, panelTitle, portrait, stars, timeAgo, viewHead,
+  act, bar, charCard, countdown, esc, fmt, fullArt, icon, money, openModal, panelTitle, portrait, stars, timeAgo,
+  viewHead,
 } from '../ui.js';
 import { OUTCOME, openReveal } from '../gacha/reveal.js';
+import { openSpotlight } from '../gacha/spotlight.js';
 
 export async function render(el, params, ctx) {
   const data = await api.get('/api/gacha');
@@ -32,6 +34,29 @@ export async function render(el, params, ctx) {
     const c = cost(count);
     return `<button class="btn btn-lg btn-stack ${cls}" data-pull="${count}" ${title ? `title="${esc(title)}"` : ''} ${c.ok ? '' : 'disabled'}>
       Pull ${count}x <span class="cost">${c.html}</span></button>`;
+  }
+
+  /** Troca: a cada 200 pulls, uma 5★ à escolha. No padrão é única e some depois de usada. */
+  function sparkHtml(b) {
+    const s = b.spark;
+    if (!s) return '';
+    const ready = s.count >= s.cost;
+    const times = Math.floor(s.count / s.cost);
+    const rule = s.once
+      ? `Uma vez por conta: com ${s.cost} pulls neste banner, escolha qualquer 5★ do pool padrão.`
+      : `A cada ${s.cost} pulls, escolha ${b.featured5.length > 1 ? 'uma das destacadas' : 'a destacada'}. A contagem vale nos dois banners limitados.`;
+    return `
+      <div class="spark-box ${ready ? 'ready' : ''}">
+        <div class="row-between"><strong class="row" style="gap:6px">${icon('exchange')}${s.once ? 'Troca única' : 'Troca de pulls'}</strong>
+          <span class="bold">${fmt(s.count)} / ${fmt(s.cost)}</span></div>
+        ${bar(Math.min(100, (s.count / s.cost) * 100), ready ? 'gold' : 'sky')}
+        <div class="row-between small">
+          <span>${rule}</span>
+          ${ready
+            ? `<button class="btn btn-sm btn-gold" data-exchange>${icon('exchange')}${times > 1 ? `Escolher 5★ (${times} trocas)` : 'Escolher 5★'}</button>`
+            : `<span class="chip">Faltam ${fmt(s.cost - s.count)}</span>`}
+        </div>
+      </div>`;
   }
 
   function heroHtml() {
@@ -89,6 +114,7 @@ export async function render(el, params, ctx) {
             </div>
             <div class="pity4-dots">${Array.from({ length: p.pity4_max }, (_, i) => `<i class="${i < p.pity4 ? 'on' : ''}"></i>`).join('')}</div>
           </div>
+          ${sparkHtml(b)}
 
           <div class="pull-row ${batch ? 'has-batch' : ''}">
             ${pullButton(1)}
@@ -194,18 +220,82 @@ export async function render(el, params, ctx) {
           </div>
           <ul class="small" style="margin:0;padding-left:18px;line-height:1.7">
             <li>A partir do pull <strong>${r.soft_pity}</strong> a chance de 5★ sobe 6 pontos percentuais por pull (pity suave).</li>
-            <li>O Holofote da semana e a Dupla Estelar dividem o mesmo pity e a mesma garantia, que continuam quando o destaque troca.
-              O banner permanente tem o próprio pity.</li>
+            <li>${data.banners.some((x) => x.key === 'duo') ? 'O Holofote da semana e a Dupla Estelar dividem' : 'Os banners limitados dividem'}
+              o mesmo pity e a mesma garantia, que continuam quando o destaque troca. O banner permanente tem o próprio pity.</li>
             <li>Tickets são gastos primeiro e o que faltar sai em carats (${fmt(b.cost.carats)} por pull):
               6 tickets + ${fmt(4 * b.cost.carats)} carats fecham um 10x. Com 2 a 9 tickets dá para usar todos de uma vez.</li>
             ${featuredRules}
             ${r.featured_chance ? '<li>4★ têm 50% de chance de ser uma das três destacadas.</li>' : ''}
             <li>Cópias repetidas aumentam o <strong>Despertar</strong> (até 5). Depois disso viram Fragmentos Estelares para a Loja.</li>
+            <li>${b.type === 'limited'
+              ? 'Troca: a cada 200 pulls nos banners limitados, escolha uma 5★ em destaque, quantas vezes quiser. Cada troca gasta 200 pulls da contagem, e o que passar continua valendo.'
+              : 'Troca única: com 200 pulls neste banner, escolha qualquer 5★ do pool padrão. Vale uma vez por conta.'}</li>
           </ul>
           <div><strong>5★</strong><div class="row" style="gap:6px;margin-top:6px">${pool(b.pool.five)}</div></div>
           <div><strong>4★</strong><div class="row" style="gap:6px;margin-top:6px">${pool(b.pool.four)}</div></div>
           <div><strong>3★</strong><div class="row" style="gap:6px;margin-top:6px">${pool(b.pool.three)}</div></div>
         </div>`,
+    });
+  }
+
+  /** Os banners limitados dividem o pity e a contagem da troca: atualiza todos do mesmo tipo. */
+  function shareState(res) {
+    for (const other of data.banners) {
+      if (other.type !== res.banner_type) continue;
+      other.pity = res.pity;
+      other.spark = res.spark;
+    }
+  }
+
+  function chooseExchange() {
+    const b = banner();
+    const s = b.spark;
+    if (!s || s.count < s.cost) return;
+    let picked = null;
+    // Sem a coleção (s.owned), as opções saem sem o aviso de nova/despertar.
+    const fate = (c) => {
+      if (!s.owned) return '';
+      const aw = s.owned[c.id];
+      if (aw === undefined) return `<span class="chip chip-pink">${icon('sparkle')}Nova!</span>`;
+      if (aw < 5) return `<span class="chip chip-purple">${icon('awakening')}Despertar ${aw + 1}/5</span>`;
+      return `<span class="chip chip-sky">${icon('fragment')}Vira fragmentos</span>`;
+    };
+    const modal = openModal({
+      title: s.once ? 'Troca única do banner padrão' : `Troca de ${s.cost} pulls`,
+      icon: 'exchange',
+      tone: 'gold',
+      wide: true,
+      body: `
+        <p class="small">${s.once
+          ? 'Escolha qualquer 5★ do pool padrão. <strong>Esta troca acontece uma vez por conta</strong>: depois dela, o seletor some deste banner.'
+          : `Escolha ${b.featured5.length > 1 ? 'uma das 5★ em destaque' : 'a 5★ em destaque'}. A troca gasta ${s.cost} pulls da contagem (você tem ${fmt(s.count)}); o que passar continua valendo para a próxima.`}</p>
+        <div class="select-grid exchange-grid">${b.featured5.map((c) => `
+          <button class="selectable" data-pick="${esc(c.id)}">${charCard(c, { meta: fate(c) })}</button>`).join('')}</div>`,
+      actions: [
+        { label: 'Cancelar', onClick: (close) => close() },
+        {
+          label: `${icon('exchange')}Trocar`,
+          cls: 'btn-primary',
+          onClick: async (close, btn) => {
+            if (!picked) return;
+            const res = await act(btn, () => api.post('/api/gacha/exchange', { banner: b.key, character: picked }));
+            if (!res) return;
+            close();
+            shareState(res);
+            drawHero();
+            await openSpotlight(res.result, { kind: 'exchange' });
+          },
+        },
+      ],
+    });
+    const confirm = modal.el.querySelector('[data-action-index="1"]');
+    confirm.disabled = true;
+    modal.el.addEventListener('click', (e) => {
+      const pick = e.target.closest('[data-pick]');
+      if (!pick) return;
+      picked = pick.dataset.pick;
+      modal.el.querySelectorAll('[data-pick]').forEach((p) => p.classList.toggle('selected', p === pick));
+      confirm.disabled = false;
     });
   }
 
@@ -222,8 +312,7 @@ export async function render(el, params, ctx) {
       pulling = false;
       return;
     }
-    // Os banners limitados dividem o pity: atualiza todos do mesmo tipo.
-    for (const other of data.banners) if (other.type === b.type) other.pity = res.pity;
+    shareState(res);
     drawHero();
     await show.play(res.results, res.paid);
     pulling = false;
@@ -247,6 +336,7 @@ export async function render(el, params, ctx) {
     }
     const pullBtn = e.target.closest('[data-pull]');
     if (pullBtn) { pull(Number(pullBtn.dataset.pull), pullBtn); return; }
+    if (e.target.closest('[data-exchange]')) { chooseExchange(); return; }
     if (e.target.closest('[data-rates]')) { showRates(); return; }
     const page = e.target.closest('[data-page]');
     if (page) {

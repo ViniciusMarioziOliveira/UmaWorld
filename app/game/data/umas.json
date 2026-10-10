@@ -1,8 +1,45 @@
 {
  "source": "https://umapyoi.net",
  "copyright": "Uma Musume Pretty Derby © Cygames, Inc.",
- "synced_at": "2026-10-08T18:41:41+00:00",
+ "synced_at": "2026-10-10T00:25:50+00:00",
  "characters": {
+  "mejiro_ramonu": {
+   "umapyoi_id": 8332,
+   "game_id": 1086,
+   "name_en": "Mejiro Ramonu",
+   "color_main": "#4bb6af",
+   "color_sub": "#3c5161",
+   "birthday": {
+    "day": 9,
+    "month": 4
+   },
+   "sizes": {
+    "b": 87,
+    "w": 57,
+    "h": 90
+   },
+   "outfit": "Racewear",
+   "images": {
+    "icon": true,
+    "card": true,
+    "sprite": true,
+    "full": true
+   },
+   "name_jp": "メジロラモーヌ",
+   "height": 165,
+   "shoe_size": "Both: 24.0cm",
+   "weight": "So perfect it's enviable",
+   "grade": "High School",
+   "residence": "Miho Dorm",
+   "slogan": "Races with a love supreme… A devilish flower, blooming unrivaled at the top.",
+   "profile": "You want to get to know me? Then come to the turf by all means. There you'll learn everything about me... Mejiro Ramonu.",
+   "strengths": "Oil painting, yoga, being photogenic",
+   "weaknesses": "Artificial flowers, microwave ovens",
+   "ears_fact": "When she gets a massage, she gets her ears massaged to the tips too.",
+   "tail_fact": "Is always in aerodynamic form.",
+   "family_fact": "The wintersweet in their garden is a family favorite.",
+   "link": "https://umamusume.jp/character/mejiroramonu"
+  },
   "special_week": {
    "umapyoi_id": 4737,
    "game_id": 1001,

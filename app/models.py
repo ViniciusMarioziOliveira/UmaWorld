@@ -42,7 +42,7 @@ class Character(Base):
     distance: Mapped[str] = mapped_column(String(10))
     style: Mapped[str] = mapped_column(String(16))
     color: Mapped[str] = mapped_column(String(9))
-    pool: Mapped[str] = mapped_column(String(10))  # "standard" | "limited"
+    pool: Mapped[str] = mapped_column(String(10))  # "standard" | "limited" | "farm"
     base_speed: Mapped[int] = mapped_column(Integer)
     base_stamina: Mapped[int] = mapped_column(Integer)
     base_power: Mapped[int] = mapped_column(Integer)
@@ -224,6 +224,9 @@ class PityState(Base):
     pity4: Mapped[int] = mapped_column(Integer, default=0)
     guaranteed: Mapped[bool] = mapped_column(Boolean, default=False)
     total: Mapped[int] = mapped_column(Integer, default=0)
+    # Pulls que contam para a troca (gacha.SPARK_COST = uma 5★ à escolha) e trocas já feitas.
+    spark: Mapped[int] = mapped_column(Integer, default=0)
+    exchanges: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class Pull(Base):

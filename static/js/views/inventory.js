@@ -1,7 +1,7 @@
 // Armazém: personagens, itens e moedas, com filtros.
 
-import { api } from '../store.js';
-import { CURRENCY_ICON, charCard, esc, fmt, icon, openModal, viewHead } from '../ui.js';
+import { api, state } from '../store.js';
+import { CURRENCY_ICON, avatar, charCard, esc, fmt, icon, openModal, viewHead } from '../ui.js';
 
 const USE_HINT = {
   ticket: ['Usar no Templo da Sorte', '#/gacha', 'gacha'],
@@ -41,10 +41,12 @@ export async function render(el, params, ctx) {
       .filter((c) => (!chars.rarity || c.character.rarity === chars.rarity)
         && (!chars.distance || c.character.distance === chars.distance))
       .sort(sorters[chars.sort]);
+    // O filtro de 6★ só aparece para quem já tem uma.
+    const rarities = [0, ...(data.characters.some((c) => c.character.rarity === 6) ? [6] : []), 5, 4, 3];
     return `
       <div class="row-between">
         <div class="row" style="gap:6px">
-          ${[0, 5, 4, 3].map((r) => `<button class="chip ${chars.rarity === r ? 'active' : ''}" data-crarity="${r}">${r ? `${r}★` : 'Todas'}</button>`).join('')}
+          ${rarities.map((r) => `<button class="chip ${chars.rarity === r ? 'active' : ''}" data-crarity="${r}">${r ? `${r}★` : 'Todas'}</button>`).join('')}
         </div>
         <div class="row" style="gap:6px">
           <select class="select" data-cdistance aria-label="Distância">
@@ -140,7 +142,8 @@ export async function render(el, params, ctx) {
       title: item.name,
       icon: item.icon,
       tone: item.rarity >= 5 ? 'gold' : item.rarity === 4 ? 'purple' : 'sky',
-      body: `<p>${esc(item.description)}</p>
+      body: `${item.category === 'frame' ? `<div class="frame-preview">${avatar({ ...state.me, frame: item }, 112)}</div>` : ''}
+        <p>${esc(item.description)}</p>
         <p class="small muted" style="margin-top:10px">Quantidade: <strong>${fmt(item.qty)}</strong> · ${esc(data.categories[item.category])}</p>
         ${equippedBy[item.id] ? `<p class="small" style="margin-top:6px">Também equipado em: <strong>${esc(equippedBy[item.id])}</strong></p>` : ''}`,
       actions: [{ label: `${icon(hintIcon)}${hint}`, cls: 'btn-primary', onClick: (c) => { c(); location.hash = href; } }],

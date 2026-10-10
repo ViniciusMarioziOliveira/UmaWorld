@@ -19,7 +19,7 @@ ATTR_TRAIN_COST = {"coins": 1_500, "items": {"cenoura": 1}}
 ATTR_GAIN_RANGE = (3, 7)
 ATTR_GREAT_CHANCE = 0.10  # treino excelente: ganho em dobro
 
-DUPE_FRAGMENTS = {3: 1, 4: 5, 5: 25}  # cópias além do despertar 5 viram fragmentos estelares
+DUPE_FRAGMENTS = {3: 1, 4: 5, 5: 25, 6: 60}  # cópias além do despertar 5 viram fragmentos estelares
 
 
 def xp_to_next(level: int) -> int:

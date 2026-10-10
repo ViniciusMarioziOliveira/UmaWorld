@@ -192,7 +192,7 @@ export const NPCS = [
   { id: 'tazuna', x: 2045, y: 930, talk: 'praca', name: 'Tazuna Hayakawa', role: 'Secretária da Academia',
     lines: ['Boas-vindas à Academia Tracen! Os avisos ficam no quadro aqui ao lado.',
       'As missões diárias renovam à meia-noite. Não esqueça de resgatar!',
-      'Que tal visitar o Templo da Sorte hoje? A Dupla Estelar acabou de chegar.'] },
+      'A cada 200 pulls nos banners limitados, você troca por uma 5★ em destaque. Não esqueça!'] },
   { id: 'etsuko', x: 1560, y: 960, talk: 'news', name: 'Etsuko Otonashi', role: 'Repórter',
     lines: ['Extra, extra! Fico de olho em cada 5★ do servidor.', 'Nenhum furo ainda... mas a sorte muda rápido!'] },
   { id: 'yayoi', x: 1690, y: 690, talk: 'lines', name: 'Yayoi Akikawa', role: 'Diretora',
@@ -203,15 +203,22 @@ export const NPCS = [
 // Umas pela Academia: viram, pulam e puxam conversa quando a jogadora chega perto.
 // move: 'stay' (fica no lugar), 'wander' (passeia num raio) ou 'patrol' (vai e volta entre a e b).
 // talk: o que acontece ao conversar ('lines' ou 'duo', que leva ao banner da Dupla Estelar).
+// Com a Dupla Estelar fechada, as Umas do banner usam greetOff/linesOff e só conversam.
 export const UMAS = [
   { id: 'forever_young', name: 'Forever Young', x: 360, y: 900, move: 'stay', talk: 'duo', emote: 'star',
     greet: 'Hey! A Dupla Estelar abriu no Templo da Sorte!',
     lines: ['Corri o mundo inteiro e voltei para cá. Agora é a sua vez de me chamar!',
-      'Areia, grama, chuva... qualquer pista é pista para mim.', 'Vem, vou te mostrar o banner!'] },
+      'Areia, grama, chuva... qualquer pista é pista para mim.', 'Vem, vou te mostrar o banner!'],
+    greetOff: 'Hey! A Dupla Estelar encerrou, mas eu continuo treinando por aqui.',
+    linesOff: ['Corri o mundo inteiro e voltei para cá. Quem sabe o banner volta também?',
+      'Areia, grama, chuva... qualquer pista é pista para mim.', 'Ainda dá para me chamar com a troca de 200 pulls, quando eu estiver em destaque.'] },
   { id: 'marche_lorraine', name: 'Marche Lorraine', x: 590, y: 900, move: 'stay', talk: 'duo', emote: 'star',
     greet: 'Bonjour! Quer conhecer o banner da Dupla Estelar?',
     lines: ['Ninguém achava que eu venceria longe de casa. Eu marchei mesmo assim.',
-      'A Forever Young e eu estamos no mesmo banner. Boa sorte no 50/50!', 'Vamos ao Templo? Eu mostro o caminho.'] },
+      'A Forever Young e eu estamos no mesmo banner. Boa sorte no 50/50!', 'Vamos ao Templo? Eu mostro o caminho.'],
+    greetOff: 'Bonjour! O nosso banner fechou, mas a marcha continua.',
+    linesOff: ['Ninguém achava que eu venceria longe de casa. Eu marchei mesmo assim.',
+      'A Forever Young e eu ainda treinamos juntas. Quem sabe numa reprise?', 'Au revoir, por enquanto!'] },
   { id: 'matikanefukukitaru', name: 'Fukukitaru', x: 200, y: 760, move: 'stay', emote: 'crystal',
     greet: 'A bola de cristal brilhou quando você chegou!',
     lines: ['A sorte de hoje aponta para o Holofote: {featured}!',

@@ -8,20 +8,24 @@ Regras (inspiradas nos gachas mais comuns):
   sorteada entre as duas. 4★ tem 50% de ser uma das três destacadas.
 - O pity é separado por tipo de banner. Os limitados (Holofote da semana e Dupla Estelar)
   dividem o mesmo, que continua valendo quando o destaque troca.
+- Troca: a cada 200 pulls dá para escolher uma 5★. Nos limitados, uma das destacadas do
+  banner, quantas vezes quiser (cada troca gasta 200 pulls da contagem, que é a mesma nos
+  dois). No padrão, qualquer 5★ do pool, uma única vez por conta.
 - De 1 a 10 pulls por vez. Tickets são gastos primeiro e o que faltar sai em carats
   (6 tickets + 600 carats fecham um 10x; com 6 tickets dá para fazer um 6x direto).
 """
 import random
 from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
 
 from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from .. import models as m
 from . import catalog, feed
-from .clock import iso, next_weekly_reset, week_index, week_start_utc
+from .clock import day_start_utc, iso, next_weekly_reset, utcnow, week_index, week_start_utc
 from .registry import CHAR_INFO, char_public, chars_by
-from .rewards import GameError, add_account_xp, get_qty, obtain_character, remove_item
+from .rewards import GameError, add_account_xp, get_qty, obtain_character, owned_characters, remove_item
 from .tracking import track
 
 PULL_COST_CARATS = 150
@@ -34,6 +38,7 @@ RATE_4 = 0.051
 PITY_4 = 10
 FEATURED_4_COUNT = 3
 ACCOUNT_XP_PER_PULL = 10
+SPARK_COST = 200  # pulls por troca
 
 SERVER_MILESTONES = [100, 250, 500, 1_000, 2_500, 5_000, 10_000, 25_000, 50_000, 100_000]
 
@@ -53,8 +58,18 @@ class Banner:
     ends_at: str | None
 
 
-def current_banners() -> dict[str, Banner]:
-    """Os banners abertos agora, pela chave da API: "limited", "duo" e "standard"."""
+def duo_run(now: datetime | None = None) -> tuple[datetime, datetime] | None:
+    """O período da Dupla Estelar aberto agora (início e fim, em UTC), ou None se ela está fechada."""
+    now = now or utcnow()
+    for start, days in catalog.DUO_BANNER_RUNS:
+        opens, closes = day_start_utc(start), day_start_utc(start + timedelta(days=days))
+        if opens <= now < closes:
+            return opens, closes
+    return None
+
+
+def current_banners(now: datetime | None = None) -> dict[str, Banner]:
+    """Os banners abertos agora, pela chave da API: "limited", "duo" (no período dela) e "standard"."""
     week = week_index()
     duo_id, duo_name, duo5 = catalog.DUO_BANNER
     limited5 = [c["id"] for c in chars_by(5, "limited") if c["id"] not in duo5]
@@ -76,19 +91,22 @@ def current_banners() -> dict[str, Banner]:
         starts_at=iso(week_start_utc()),
         ends_at=iso(next_weekly_reset()),
     )
-    duo = Banner(
-        key="duo",
-        id=duo_id,
-        type="limited",
-        name=duo_name,
-        subtitle=f"{' e '.join(CHAR_INFO[c]['name'] for c in duo5)} em destaque no mesmo banner. "
-                 "O pity e a garantia são os mesmos do Holofote.",
-        featured5=list(duo5),
-        featured4=featured4(len(fours) // 2),  # 4★ diferentes das do Holofote, também semanais
-        starts_at=None,
-        ends_at=None,
-    )
-    standard = Banner(
+    banners = {"limited": limited}
+    run = duo_run(now)
+    if run:
+        banners["duo"] = Banner(
+            key="duo",
+            id=duo_id,
+            type="limited",
+            name=duo_name,
+            subtitle=f"{' e '.join(CHAR_INFO[c]['name'] for c in duo5)} em destaque no mesmo banner. "
+                     "O pity e a garantia são os mesmos do Holofote.",
+            featured5=list(duo5),
+            featured4=featured4(len(fours) // 2),  # 4★ diferentes das do Holofote, também semanais
+            starts_at=iso(run[0]),
+            ends_at=iso(run[1]),
+        )
+    banners["standard"] = Banner(
         key="standard",
         id="standard",
         type="standard",
@@ -99,7 +117,7 @@ def current_banners() -> dict[str, Banner]:
         starts_at=None,
         ends_at=None,
     )
-    return {"limited": limited, "duo": duo, "standard": standard}
+    return banners
 
 
 def banner_label(banner_type: str, banner_id: str) -> str:
@@ -122,7 +140,7 @@ def get_pity(db: Session, user_id: int, banner_type: str) -> m.PityState:
     state = db.get(m.PityState, (user_id, banner_type))
     if state is None:
         state = m.PityState(user_id=user_id, banner_type=banner_type, pity5=0, pity4=0,
-                            guaranteed=False, total=0)
+                            guaranteed=False, total=0, spark=0, exchanges=0)
         db.add(state)
         db.flush()
     return state
@@ -140,11 +158,31 @@ def pity_view(state: m.PityState | None) -> dict:
     }
 
 
-def banner_view(banner: Banner, state: m.PityState | None) -> dict:
+def spark_view(banner: Banner, state: m.PityState | None, awakening: dict[str, int] | None = None) -> dict | None:
+    """A troca do banner. None quando a troca única do banner padrão já foi usada: o seletor some.
+    Com a troca pronta e o despertar de cada personagem do jogador em mãos, diz o das 5★ que ele
+    já tem (a tela mostra se a escolha vem nova, vira despertar ou vira fragmentos)."""
+    once = banner.type == "standard"
+    if once and state and state.exchanges:
+        return None
+    count = state.spark if state else 0
+    view = {"count": count, "cost": SPARK_COST, "ready": count >= SPARK_COST, "once": once}
+    if view["ready"] and awakening is not None:
+        view["owned"] = {cid: aw for cid, aw in awakening.items() if CHAR_INFO[cid]["rarity"] == 5}
+    return view
+
+
+def awakenings(db: Session, user: m.User) -> dict[str, int]:
+    """O despertar de cada personagem do jogador, a partir da coleção que a ação já leu."""
+    return {cid: uc.awakening for cid, uc in owned_characters(db, user.id).items()}
+
+
+def banner_view(banner: Banner, state: m.PityState | None, awakening: dict[str, int] | None = None) -> dict:
     data = asdict(banner)
     data["featured5"] = [char_public(c) for c in banner.featured5]
     data["featured4"] = [char_public(c) for c in banner.featured4]
     data["pity"] = pity_view(state)
+    data["spark"] = spark_view(banner, state, awakening)
     data["cost"] = {"carats": PULL_COST_CARATS, "tickets": 1, "max": MAX_PULLS}
     data["rates"] = {
         "five": RATE_5, "four": RATE_4, "soft_pity": SOFT_PITY, "hard_pity": HARD_PITY,
@@ -251,6 +289,7 @@ def pull(db: Session, user: m.User, banner_key: str, count: int) -> dict:
                       f"conseguiu {feed.char_tag(CHAR_INFO[cid]['name'], 5)} com {at_pity} pity.", user,
                       {"character": cid, "pity": at_pity, "featured": featured, "banner": banner.key})
 
+    state.spark += count
     user.total_pulls += count
     five_count = sum(1 for r in results if r["rarity"] == 5)
     track(db, user, "pull", count)
@@ -259,7 +298,42 @@ def pull(db: Session, user: m.User, banner_key: str, count: int) -> dict:
     _bump_server_pulls(db, count)
 
     return {"banner": banner.key, "banner_type": banner.type, "results": results, "paid": paid,
-            "pity": pity_view(state)}
+            "pity": pity_view(state), "spark": spark_view(banner, state, awakenings(db, user))}
+
+
+def exchange(db: Session, user: m.User, banner_key: str, character_id: str) -> dict:
+    """Troca SPARK_COST pulls por uma 5★ à escolha (as destacadas do banner; no padrão, o pool)."""
+    banner = current_banners().get(banner_key)
+    if banner is None:
+        raise GameError("Esse banner não está aberto.")
+    if character_id not in banner.featured5:
+        raise GameError("Essa personagem não faz parte da troca deste banner.")
+    state = get_pity(db, user.id, banner.type)
+    if banner.type == "standard" and state.exchanges:
+        raise GameError("A troca do banner padrão já foi usada nesta conta.")
+    if state.spark < SPARK_COST:
+        raise GameError(f"Faltam {SPARK_COST - state.spark} pulls para a troca.")
+
+    state.spark -= SPARK_COST
+    state.exchanges += 1
+    outcome = obtain_character(db, user, character_id)
+    feed.emit(db, "exchange", "exchange",
+              f"trocou {SPARK_COST} pulls por {feed.char_tag(CHAR_INFO[character_id]['name'], 5)}.", user,
+              {"character": character_id, "banner": banner.key})
+    return {
+        "banner": banner.key,
+        "banner_type": banner.type,
+        "result": {
+            "character": char_public(character_id),
+            "rarity": 5,
+            "featured": banner.type == "limited",
+            "outcome": outcome["status"],
+            "awakening": outcome["awakening"],
+            "fragments": outcome["fragments"],
+        },
+        "pity": pity_view(state),
+        "spark": spark_view(banner, state, awakenings(db, user)),
+    }
 
 
 def history(db: Session, user: m.User, banner_type: str | None, rarity: int | None,

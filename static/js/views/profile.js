@@ -2,7 +2,7 @@
 
 import { api, state } from '../store.js';
 import {
-  act, avatar, badgeIcon, bar, charCard, dateBR, esc, fmt, icon, openModal, panelTitle, rankBadge,
+  act, avatar, badgeIcon, bar, charCard, dateBR, esc, fmt, icon, openModal, panelTitle, rankBadge, stars,
   timeAgo, toast, viewHead,
 } from '../ui.js';
 
@@ -31,6 +31,7 @@ export async function render(el, params, ctx) {
         <div class="stack" style="gap:6px">
           <h1>${esc(p.nickname)}</h1>
           ${p.title ? `<span class="profile-title">${icon('title')}${esc(p.title.name)}</span>` : ''}
+          ${p.frame ? `<span class="small muted row" style="gap:6px">${icon('frame')}${esc(p.frame.name)}</span>` : ''}
           ${p.avatar ? `<span class="small muted row" style="gap:6px">${icon('footprints')}Anda pelo mundo com <strong>${esc(p.avatar.character.name)}</strong></span>` : ''}
           ${me ? `<div style="max-width:360px">${bar(me.max_level ? 100 : (me.xp / me.xp_to_next) * 100, 'pink')}
             <div class="tiny muted" style="margin-top:3px">${me.max_level ? 'Nível máximo!' : `${fmt(me.xp)} / ${fmt(me.xp_to_next)} XP de conta`}</div></div>` : ''}
@@ -80,7 +81,8 @@ export async function render(el, params, ctx) {
         ${bar((s.collection / s.collection_total) * 100, 'gold')}
         <div class="card-grid small" style="margin-top:14px">${p.collection.map((c) => charCard(c, {
           locked: !c.owned,
-          meta: c.owned ? `Nv. ${c.level}${c.awakening ? ` · ${icon('awakening')}${c.awakening}` : ''}` : 'Não obtida',
+          meta: c.owned ? `Nv. ${c.level}${c.awakening ? ` · ${icon('awakening')}${c.awakening}` : ''}`
+            : c.pool === 'farm' ? `${icon('flower')}Só na Fazenda` : 'Não obtida',
         })).join('')}</div>
       </section>`;
   }
@@ -90,18 +92,40 @@ export async function render(el, params, ctx) {
     if (ctx.alive) draw();
   }
 
+  /** Galeria de molduras: a prévia é o seu próprio avatar; as que faltam mostram como conseguir. */
+  function framesHtml(chosen) {
+    const preview = (frame) => avatar({ ...p, frame }, 72);
+    const none = `
+      <button type="button" class="frame-opt ${chosen ? '' : 'selected'}" data-frame-pick="">
+        <span class="fo-art">${preview(null)}</span>
+        <span class="fo-name">Sem moldura</span>
+        <span class="fo-sub">O avatar limpo, só com a corredora.</span>
+      </button>`;
+    return none + p.cosmetics.frame.map((f) => `
+      <button type="button" class="frame-opt r${f.rarity} ${f.owned ? '' : 'locked'} ${chosen === f.id ? 'selected' : ''}"
+        data-frame-pick="${esc(f.id)}" ${f.owned ? '' : 'aria-disabled="true"'}>
+        <span class="fo-art">${preview(f)}${f.owned ? '' : `<span class="fo-lock">${icon('lock')}</span>`}</span>
+        <span class="fo-name">${esc(f.name)} ${stars(f.rarity)}</span>
+        <span class="fo-sub">${esc(f.description)}</span>
+        ${f.owned ? (chosen === f.id ? `<span class="chip chip-green">${icon('check')}Equipada</span>` : '')
+          : `<span class="fo-how">${f.sources.map((s) => esc(s)).join('<br>') || 'Em breve'}</span>`}
+      </button>`).join('');
+  }
+
   function customize() {
-    const opts = (list, current, empty) => `<option value="">${empty}</option>${list.map((i) =>
+    const opts = (list, current, empty) => `<option value="">${empty}</option>${list.filter((i) => i.owned).map((i) =>
       `<option value="${esc(i.id)}" ${current === i.id ? 'selected' : ''}>${esc(i.name)}</option>`).join('')}`;
+    let frame = p.frame?.id || '';
     const modal = openModal({
       title: 'Personalizar perfil',
       icon: 'brush',
       tone: 'purple',
+      wide: true,
       body: `
         <label class="field"><span>Título</span>
           <select class="select" data-title style="width:100%">${opts(p.cosmetics.title, p.title?.id, 'Sem título')}</select></label>
-        <label class="field"><span>Moldura do avatar</span>
-          <select class="select" data-frame style="width:100%">${opts(p.cosmetics.frame, p.frame?.id, 'Sem moldura')}</select></label>
+        <div class="field"><span>Moldura do avatar</span>
+          <div class="frame-gallery" data-frames>${framesHtml(frame)}</div></div>
         <p class="small muted">Novos títulos e molduras vêm de conquistas e da Loja (aba Cosméticos). Para trocar a corredora que anda pelo mundo, use o botão "Trocar" no próprio mundo.</p>`,
       actions: [
         { label: 'Cancelar', onClick: (close) => close() },
@@ -111,7 +135,7 @@ export async function render(el, params, ctx) {
           onClick: async (close, btn) => {
             const body = {
               title_item_id: modal.el.querySelector('[data-title]').value || null,
-              frame_item_id: modal.el.querySelector('[data-frame]').value || null,
+              frame_item_id: frame || null,
             };
             if (await act(btn, () => api.put('/api/profile', body))) {
               close();
@@ -121,6 +145,13 @@ export async function render(el, params, ctx) {
           },
         },
       ],
+    });
+    const gallery = modal.el.querySelector('[data-frames]');
+    gallery.addEventListener('click', (e) => {
+      const opt = e.target.closest('[data-frame-pick]');
+      if (!opt || opt.getAttribute('aria-disabled') === 'true') return;
+      frame = opt.dataset.framePick;
+      gallery.querySelectorAll('[data-frame-pick]').forEach((o) => o.classList.toggle('selected', o === opt));
     });
   }
 

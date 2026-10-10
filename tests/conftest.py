@@ -6,14 +6,37 @@ import tempfile
 _TMP = tempfile.mkdtemp(prefix="umaworld-test-")
 os.environ["DATABASE_URL"] = f"sqlite:///{_TMP}/test.db"
 
+from datetime import timedelta  # noqa: E402
+
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app import models as m  # noqa: E402
 from app.database import SessionLocal  # noqa: E402
+from app.game import afk, catalog, gacha  # noqa: E402
+from app.game.clock import day_start_utc  # noqa: E402
 from app.main import app  # noqa: E402
 
 _ids = itertools.count(1)
+FIRST_DUO_RUN = catalog.DUO_BANNER_RUNS[0]
+
+
+def at(moment):
+    """Relógio parado num instante (UTC, como no banco), para trocar o `utcnow` de um módulo."""
+    return lambda: moment
+
+
+@pytest.fixture(autouse=True)
+def no_rare_visits(monkeypatch):
+    """A visitante rara da Fazenda só aparece nos testes que trocam o sorteio dela."""
+    monkeypatch.setattr(afk, "rng", StubRng(0.99))
+
+
+@pytest.fixture
+def duo_open(monkeypatch):
+    """Os testes da Dupla Estelar não podem depender da data de hoje: o relógio do gacha fica no
+    2º dia do primeiro período dela."""
+    monkeypatch.setattr(gacha, "utcnow", at(day_start_utc(FIRST_DUO_RUN[0]) + timedelta(days=1, hours=15)))
 
 
 @pytest.fixture(scope="session")

@@ -18,28 +18,28 @@ export const OUTCOME = {
   fragments: (r) => `<span class="outcome fragments">${r.fragments ? `+${r.fragments} fragmentos` : 'Fragmentos'}</span>`,
 };
 
-const OUTCOME_CHIP = {
+export const OUTCOME_CHIP = {
   new: () => `<span class="chip chip-pink">${icon('sparkle')}Nova no estábulo!</span>`,
   awakening: (r) => `<span class="chip chip-purple">${icon('awakening')}Despertar ${r.awakening}/5</span>`,
   fragments: (r) => `<span class="chip chip-sky">${icon('fragment')}+${r.fragments} fragmentos</span>`,
 };
 
-const TONE = { 3: [95, 168, 255], 4: [184, 132, 255], 5: [255, 213, 110] };
+export const TONE = { 3: [95, 168, 255], 4: [184, 132, 255], 5: [255, 213, 110], 6: [94, 233, 214] };
 const STARLIGHT = [205, 218, 255];
-const WHITE = [255, 255, 255];
-const RAINBOW = [[255, 111, 216], [255, 211, 110], [121, 255, 176], [111, 214, 255], [169, 139, 255]];
+export const WHITE = [255, 255, 255];
+export const RAINBOW = [[255, 111, 216], [255, 211, 110], [121, 255, 176], [111, 214, 255], [169, 139, 255]];
 const SEAM = 74; // posição do picote, em % da largura do bilhete
 
-const rand = (a, b) => a + Math.random() * (b - a);
+export const rand = (a, b) => a + Math.random() * (b - a);
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
-function centerOf(el) {
+export function centerOf(el) {
   const r = el.getBoundingClientRect();
   return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 }
 
-function toElement(html) {
+export function toElement(html) {
   const t = document.createElement('template');
   t.innerHTML = html.trim();
   return t.content.firstElementChild;
@@ -62,8 +62,24 @@ function sparkle(ctx, x, y, s, rot, color) {
   ctx.restore();
 }
 
+/** Pétala (ponta para cima, com o entalhe na ponta), do tamanho `s`. */
+function petal(ctx, x, y, s, rot, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(0, s);
+  ctx.bezierCurveTo(-s * 0.95, s * 0.35, -s * 0.7, -s * 0.85, -s * 0.18, -s);
+  ctx.lineTo(0, -s * 0.78);
+  ctx.lineTo(s * 0.18, -s);
+  ctx.bezierCurveTo(s * 0.7, -s * 0.85, s * 0.95, s * 0.35, 0, s);
+  ctx.fill();
+  ctx.restore();
+}
+
 /** Estrelas que viram túnel de dobra (fundo) + faíscas, anéis e partículas que convergem (frente). */
-class Sky {
+export class Sky {
   constructor(back, front, reduce) {
     this.canvases = [back, front];
     this.back = back.getContext('2d');
@@ -128,14 +144,16 @@ class Sky {
     this.warpPower = power;
   }
 
-  burst(x, y, { palette = [WHITE], n = 24, speed = 320, size = 2.2, life = 0.9, gravity = 160, sparkles = 0.3 } = {}) {
+  burst(x, y, { palette = [WHITE], n = 24, speed = 320, size = 2.2, life = 0.9, gravity = 160, sparkles = 0.3, petals = 0 } = {}) {
     const total = this.reduce ? Math.ceil(n / 4) : n;
     for (let i = 0; i < total; i += 1) {
       const a = rand(0, Math.PI * 2);
       const v = speed * rand(0.3, 1);
       const l = life * rand(0.6, 1.1);
+      const isPetal = Math.random() < petals;
       this.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: gravity, life: l, max: l,
-        size: size * rand(0.6, 1.4), color: pick(palette), star: Math.random() < sparkles, rot: rand(0, 6.3) });
+        size: size * rand(0.6, 1.4), color: pick(palette), petal: isPetal, star: !isPetal && Math.random() < sparkles,
+        rot: rand(0, 6.3), spin: rand(-3, 3), sway: rand(0, 6.3) });
     }
   }
 
@@ -263,7 +281,12 @@ class Sky {
         alpha = Math.min(1, k * 1.8);
         size = p.size * (0.35 + 0.65 * k);
       }
-      if (p.star) {
+      if (p.petal) {
+        // Pétalas planam: giram devagar e balançam de um lado para o outro enquanto caem.
+        p.rot += dt * p.spin;
+        p.x += Math.sin(this.time * 2.4 + p.sway) * 26 * dt;
+        petal(ctx, p.x, p.y, p.size * 2.6, p.rot, rgba(p.color, Math.min(1, alpha * 1.15)));
+      } else if (p.star) {
         p.rot += dt * 4;
         sparkle(ctx, p.x, p.y, size * 3.2, p.rot, rgba(p.color, alpha));
       } else {

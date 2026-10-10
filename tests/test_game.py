@@ -1,10 +1,12 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+
+import pytest
 
 from app import models as m
-from app.game import gacha, training
+from app.game import afk, gacha, training
 from app.game.clock import utcnow
 
-from .conftest import StubRng
+from .conftest import StubRng, at
 
 
 def test_register_and_login(client, player):
@@ -138,6 +140,76 @@ def test_afk_helpers_and_upgrade(player):
     assert res.json()["farm"]["level"] == 2
 
 
+def set_last_collect(player, when):
+    def fn(db, user):
+        db.get(m.Farm, user.id).last_collected_at = when
+    player.edit(fn)
+
+
+def test_rare_visitor_rolls_once_per_whole_hour(player, monkeypatch):
+    """Cada hora inteira de produção é um sorteio à parte; a fração que sobra vale na próxima coleta."""
+    rolls = []
+
+    class Unlucky(StubRng):
+        def random(self):
+            rolls.append(1)
+            return 0.99
+
+    monkeypatch.setattr(afk, "rng", Unlucky(0.99))
+    set_last_collect(player, utcnow() - timedelta(hours=5, minutes=30))
+    assert player.get("/api/afk").json()["rare"]["chances"] == 5
+    res = player.post("/api/afk/collect").json()
+    assert res["rare"] == [] and len(rolls) == 5
+    rare = player.get("/api/afk").json()["rare"]
+    assert abs(rare["carry"] - 0.5) < 0.01 and rare["chances"] == 0 and rare["owned"] is False
+
+    # A meia hora guardada + 7h30 = 8 horas inteiras: 8 sorteios, e não sobra nada.
+    rolls.clear()
+    set_last_collect(player, utcnow() - timedelta(hours=7, minutes=30))
+    player.post("/api/afk/collect")
+    assert len(rolls) == 8
+    assert player.get("/api/afk").json()["rare"]["carry"] < 0.01
+
+    # Parado 30h: o armazém (8h) limita a produção, e com ela as chances.
+    rolls.clear()
+    set_last_collect(player, utcnow() - timedelta(hours=30))
+    player.post("/api/afk/collect")
+    assert len(rolls) == 8
+
+
+def test_rare_visitor_weekend_hours_and_six_star(client, player, monkeypatch):
+    """De sexta 20h a sábado 4h (Brasília): 4 horas de sexta (0,5%) e 4 de sábado (1%)."""
+    friday_8pm = datetime(2026, 10, 9, 23, 0)  # 20:00 em Brasília, no UTC do banco
+    monkeypatch.setattr(afk, "utcnow", at(friday_8pm + timedelta(hours=8)))
+    monkeypatch.setattr(afk, "rng", StubRng(0.007))  # entre 0,5% e 1%: só as horas de sábado acertam
+    set_last_collect(player, friday_8pm)
+    res = player.post("/api/afk/collect")
+    assert res.status_code == 200, res.text
+    rare = res.json()["rare"]
+    assert [r["outcome"] for r in rare] == ["new", "awakening", "awakening", "awakening"]
+    assert rare[0]["character"]["id"] == afk.RARE_VISITOR and rare[0]["rarity"] == 6
+    assert rare[0]["user_character_id"] and rare[-1]["awakening"] == 3
+
+    view = player.get("/api/afk").json()
+    assert view["rare"]["owned"] is True and view["rare"]["awakening"] == 3
+    feed = client.get("/api/feed").json()["events"]
+    assert sum(e["kind"] == "six_star" and e["nickname"] == player.nickname for e in feed) == 4
+
+    # Como ajudante, a 6★ dá o maior bônus da fazenda.
+    res = player.post("/api/afk/helpers", {"slots": [rare[0]["user_character_id"], None, None]})
+    assert res.json()["farm"]["efficiency"] == pytest.approx(1 + afk.HELPER_RARITY_BONUS[6] + 1 / 1000)
+
+
+def test_six_star_only_comes_from_the_farm(player):
+    offers = player.get("/api/shop").json()["offers"]
+    assert all(o.get("character", {}).get("id") != afk.RARE_VISITOR for o in offers)
+    for banner in player.get("/api/gacha").json()["banners"]:
+        assert afk.RARE_VISITOR not in [c["id"] for tier in banner["pool"].values() for c in tier]
+    profile = player.get(f"/api/profile/{player.nickname}").json()
+    assert profile["stats"]["collection_total"] == 37
+    assert next(c for c in profile["collection"] if c["id"] == afk.RARE_VISITOR)["pool"] == "farm"
+
+
 def test_missions_claim(player, monkeypatch):
     monkeypatch.setattr(gacha, "rng", StubRng(0.99))
     player.post("/api/gacha/pull", {"banner": "standard", "count": 1})
@@ -190,7 +262,7 @@ def test_profile_and_ranking(player):
     assert player.get("/api/ranking/xyz").status_code == 404
 
 
-def test_hub_and_public_feed(client, player):
+def test_hub_and_public_feed(client, player, duo_open):
     hub = player.get("/api/hub").json()
     assert hub["stats"]["players"] >= 1
     assert len(hub["events"]) == 4

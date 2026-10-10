@@ -1,8 +1,17 @@
+from datetime import date, timedelta
+
 from app import models as m
-from app.game import gacha
+from app.game import catalog, gacha
+from app.game.clock import day_start_utc
 from app.game.registry import chars_by
 
-from .conftest import StubRng
+from .conftest import FIRST_DUO_RUN as FIRST_RUN, StubRng, at
+
+
+def set_spark(player, banner_type, spark):
+    def fn(db, user):
+        gacha.get_pity(db, user.id, banner_type).spark = spark
+    player.edit(fn)
 
 
 def give_carats(player, amount=100_000):
@@ -73,11 +82,13 @@ def test_hard_pity_and_50_50(player, monkeypatch):
     assert res["results"][0]["character"]["id"] == limited["featured5"][0]["id"]
 
 
-def test_duo_banner_lineup():
+def test_duo_banner_lineup(duo_open):
     banners = gacha.current_banners()
     assert list(banners) == ["limited", "duo", "standard"]
     duo = banners["duo"]
-    assert duo.type == "limited" and duo.ends_at is None
+    assert duo.type == "limited"
+    # 21 dias: abre à 00:00 do primeiro dia e fecha à 00:00 do 22º (horário de Brasília = UTC-3).
+    assert (duo.starts_at, duo.ends_at) == ("2026-10-08T03:00:00Z", "2026-10-29T03:00:00Z")
     assert duo.featured5 == ["forever_young", "marche_lorraine"]
     # As duas não entram na rotação semanal, e as 4★ em destaque são outras.
     assert banners["limited"].featured5[0] not in duo.featured5
@@ -87,7 +98,82 @@ def test_duo_banner_lineup():
     assert not set(duo.featured5) & {c["id"] for c in chars_by(5, "standard")}
 
 
-def test_duo_banner_50_50_and_guarantee(player, monkeypatch):
+def test_duo_banner_closes_after_21_days_and_can_rerun(player, monkeypatch):
+    opens = day_start_utc(FIRST_RUN[0])
+    closes = opens + timedelta(days=21)
+    monkeypatch.setattr(gacha, "utcnow", at(closes - timedelta(seconds=1)))
+    assert "duo" in gacha.current_banners()
+    assert catalog.last_day(FIRST_RUN) == date(2026, 10, 28)
+
+    monkeypatch.setattr(gacha, "utcnow", at(closes))
+    assert list(gacha.current_banners()) == ["limited", "standard"]
+    assert [b["key"] for b in player.get("/api/gacha").json()["banners"]] == ["limited", "standard"]
+    assert all(e["link"] != "gacha/duo" for e in player.get("/api/hub").json()["events"])
+    res = player.post("/api/gacha/pull", {"banner": "duo", "count": 1})
+    assert res.status_code == 400 and "não está aberto" in res.json()["detail"]
+    monkeypatch.setattr(gacha, "utcnow", at(opens - timedelta(seconds=1)))
+    assert "duo" not in gacha.current_banners()
+
+    # Rerun: outro período na lista, e o mesmo banner volta (com o fim do novo período).
+    monkeypatch.setattr(catalog, "DUO_BANNER_RUNS", [FIRST_RUN, (date(2027, 1, 10), 14)])
+    monkeypatch.setattr(gacha, "utcnow", at(day_start_utc(date(2027, 1, 12))))
+    assert gacha.current_banners()["duo"].ends_at == "2027-01-24T03:00:00Z"
+
+
+def test_pulls_fill_the_exchange_count(player, duo_open):
+    give_carats(player)
+    player.post("/api/gacha/pull", {"banner": "standard", "count": 10})
+    res = player.post("/api/gacha/pull", {"banner": "limited", "count": 3}).json()
+    assert res["spark"] == {"count": 3, "cost": 200, "ready": False, "once": False}
+    player.post("/api/gacha/pull", {"banner": "duo", "count": 2})
+    banners = banners_by_key(player)
+    assert banners["limited"]["spark"]["count"] == banners["duo"]["spark"]["count"] == 5  # os limitados dividem
+    assert banners["standard"]["spark"] == {"count": 10, "cost": 200, "ready": False, "once": True}
+
+
+def test_limited_exchange_as_many_times_as_200_pulls_allow(client, player, duo_open):
+    set_spark(player, "limited", 450)
+    duo = banners_by_key(player)["duo"]
+    assert duo["spark"]["ready"] is True and duo["spark"]["owned"] == {}  # nenhuma 5★ ainda
+
+    # Só as destacadas do banner escolhido entram na troca.
+    holofote_star = banners_by_key(player)["limited"]["featured5"][0]["id"]
+    assert player.post("/api/gacha/exchange", {"banner": "duo", "character": holofote_star}).status_code == 400
+    assert player.post("/api/gacha/exchange", {"banner": "duo", "character": "special_week"}).status_code == 400
+
+    first = player.post("/api/gacha/exchange", {"banner": "duo", "character": "forever_young"}).json()
+    assert first["result"]["character"]["id"] == "forever_young" and first["result"]["outcome"] == "new"
+    assert first["spark"]["count"] == 250 and first["spark"]["owned"] == {"forever_young": 0}
+    again = player.post("/api/gacha/exchange", {"banner": "duo", "character": "forever_young"}).json()
+    assert again["result"]["outcome"] == "awakening" and again["result"]["awakening"] == 1
+    assert again["spark"] == {"count": 50, "cost": 200, "ready": False, "once": False}
+
+    res = player.post("/api/gacha/exchange", {"banner": "limited", "character": holofote_star})
+    assert res.status_code == 400 and "Faltam 150 pulls" in res.json()["detail"]
+    # A troca não é um pull: não entra no histórico nem no contador de 5★ dos pulls.
+    assert player.get("/api/gacha/history").json()["total"] == 0
+    assert player.get("/api/me").json()["me"]["five_star_count"] == 0
+    feed = client.get("/api/feed").json()["events"]
+    assert any(e["kind"] == "exchange" and e["nickname"] == player.nickname for e in feed)
+
+
+def test_standard_exchange_only_once_per_account(player):
+    set_spark(player, "standard", 200)
+    std = banners_by_key(player)["standard"]
+    assert std["spark"]["ready"] and std["spark"]["once"]
+    res = player.post("/api/gacha/exchange", {"banner": "standard", "character": "special_week"})
+    assert res.status_code == 200, res.text
+    assert res.json()["result"]["character"]["id"] == "special_week"
+    assert res.json()["spark"] is None  # o seletor some
+    assert banners_by_key(player)["standard"]["spark"] is None
+
+    set_spark(player, "standard", 400)
+    res = player.post("/api/gacha/exchange", {"banner": "standard", "character": "gold_ship"})
+    assert res.status_code == 400 and "já foi usada" in res.json()["detail"]
+    assert banners_by_key(player)["standard"]["spark"] is None
+
+
+def test_duo_banner_50_50_and_guarantee(player, monkeypatch, duo_open):
     """Perdeu o 50/50: a garantia entrega uma das duas destacadas, sorteada entre elas."""
     give_carats(player)
     monkeypatch.setattr(gacha, "rng", StubRng(0.99))  # 5★ só no hard pity, e perde o 50/50
@@ -111,7 +197,7 @@ def test_duo_banner_50_50_and_guarantee(player, monkeypatch):
     assert [i["banner_label"] for i in history] == ["Dupla Estelar"] * 3
 
 
-def test_limited_banners_share_pity_and_guarantee(player, monkeypatch):
+def test_limited_banners_share_pity_and_guarantee(player, monkeypatch, duo_open):
     give_carats(player)
     monkeypatch.setattr(gacha, "rng", StubRng(0.99))
     assert player.post("/api/gacha/pull", {"banner": "limited", "count": 3}).status_code == 200

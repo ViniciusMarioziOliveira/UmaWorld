@@ -64,7 +64,8 @@ export async function render(el, params, ctx) {
       <aside class="panel roster">
         <label class="search-input">${icon('search')}<input class="input" type="search" placeholder="Buscar personagem…" data-search aria-label="Buscar personagem"></label>
         <div class="row" style="gap:6px">
-          ${[0, 5, 4, 3].map((r) => `<button class="chip ${r === 0 ? 'active' : ''}" data-rarity="${r}">${r ? `${r}★` : 'Todas'}</button>`).join('')}
+          ${[0, ...(roster.some((c) => c.character.rarity === 6) ? [6] : []), 5, 4, 3].map((r) =>
+            `<button class="chip ${r === 0 ? 'active' : ''}" data-rarity="${r}">${r ? `${r}★` : 'Todas'}</button>`).join('')}
         </div>
         <div class="roster-list" data-roster></div>
       </aside>

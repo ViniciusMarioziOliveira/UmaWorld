@@ -66,6 +66,8 @@ ICONS = {
     "bag": "game-icons:shopping-bag",
     "wave": "ph:hand-waving-fill",
     "farmer": "game-icons:farmer",
+    "flower": "game-icons:lotus-flower",
+    "exchange": "game-icons:trade",
     "party": "game-icons:party-popper",
     "sunrise": "game-icons:sunrise",
     "calendar": "game-icons:calendar",

@@ -62,3 +62,20 @@ def test_migration_upgrades_v1_database(tmp_path):
         icon, message = conn.execute(text("SELECT icon, message FROM feed_events")).one()
     assert icon == "star-burst"
     assert message == "conseguiu [5★ Gold Ship] com 80 pity."
+
+
+def test_migration_adds_the_exchange_count(tmp_path):
+    """Banco de antes da troca de 200 pulls: os pulls já feitos contam, até uma troca."""
+    engine = create_engine(f"sqlite:///{tmp_path / 'v3.db'}")
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE users (id INTEGER PRIMARY KEY, nickname VARCHAR(16), avatar_character_id VARCHAR(40))"))
+        conn.execute(text("CREATE TABLE pity (user_id INTEGER, banner_type VARCHAR(10), pity5 INTEGER, pity4 INTEGER, "
+                          "guaranteed BOOLEAN, total INTEGER, PRIMARY KEY (user_id, banner_type))"))
+        conn.execute(text("INSERT INTO pity VALUES (1, 'limited', 30, 2, 0, 450), (1, 'standard', 5, 5, 0, 50)"))
+
+    upgrade_schema(engine)
+    upgrade_schema(engine)  # rodar duas vezes não pode somar de novo
+
+    with engine.connect() as conn:
+        rows = dict(conn.execute(text("SELECT banner_type, spark || '/' || exchanges FROM pity")).all())
+    assert rows == {"limited": "200/0", "standard": "50/0"}

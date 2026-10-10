@@ -172,9 +172,9 @@ def obtain_character(db: Session, user: m.User, character_id: str) -> dict:
         refresh_power(uc)
         if uc.awakening == MAX_AWAKENING:
             track(db, user, "max_awakening", 1)
-            if info["rarity"] == 5:
+            if info["rarity"] >= 5:
                 feed.emit(db, "awakening", "awakening",
-                          f"despertou totalmente {feed.char_tag(info['name'], 5)}!", user,
+                          f"despertou totalmente {feed.char_tag(info['name'], info['rarity'])}!", user,
                           {"character": character_id})
         return {"status": "awakening", "awakening": uc.awakening, "fragments": 0, "user_character_id": uc.id}
 

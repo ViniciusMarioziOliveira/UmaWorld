@@ -83,6 +83,12 @@ def cached(db: Session, key):
     return db.info.get(_CACHE, {}).get(key)
 
 
+def forget(db: Session, key) -> None:
+    """Descarta o que `session_cache` guardou para `key`: a próxima leitura consulta o banco.
+    Para quando a ação muda quais linhas a consulta traria (e não só os valores delas)."""
+    db.info.get(_CACHE, {}).pop(key, None)
+
+
 @event.listens_for(Session, "after_rollback")
 def _drop_cache(session: Session) -> None:
     session.info.pop(_CACHE, None)

@@ -63,6 +63,8 @@ def list_view(db: Session, user: m.User) -> dict:
         elif offer.rewards.get("items"):
             (item_id, _), = offer.rewards["items"].items()
             entry["description"] = ITEM_INFO[item_id]["description"]
+            if ITEM_INFO[item_id]["category"] == "frame":
+                entry["frame"] = ITEM_INFO[item_id]["data"]["css"]  # a Loja mostra a moldura no seu avatar
         out.append(entry)
     return {
         "tabs": TABS,

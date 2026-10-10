@@ -1,5 +1,7 @@
 // Componentes e utilitários de interface (strings HTML + helpers de DOM).
 
+import { frameArt, frameTier } from './frames.js';
+
 export const fmt = (n) => Number(n ?? 0).toLocaleString('pt-BR');
 
 export function esc(value) {
@@ -53,12 +55,15 @@ export function fullArt(char, cls = '') {
   return `<img class="fullart ${cls}" src="${umaImg(char.id, 'full')}" alt="${esc(char.name)}" decoding="async">`;
 }
 
-/** Avatar de jogador: a corredora escolhida para o mundo, com a moldura equipada. */
+/** Avatar de jogador: a corredora escolhida para o mundo, com a moldura equipada (frames.js). */
 export function avatar(user, size = 38) {
   const charId = user?.avatar?.character?.id || user?.avatar_id;
-  const frame = user?.frame?.data?.css ? `frame-${esc(user.frame.data.css)}` : '';
+  const css = user?.frame?.data?.css;
+  const tier = frameTier(size);
+  const frame = css ? `frame-${esc(css)} ${tier}` : '';
+  const art = css && tier !== 'fz-sm' ? frameArt(css) : '';
   const img = charId ? `<img src="${umaImg(charId, 'icon')}" alt="" loading="lazy" onerror="this.remove()">` : '';
-  return `<span class="avatar ${frame}" style="--s:${size}px"><b>${esc(initials(user?.nickname || '?'))}</b>${img}</span>`;
+  return `<span class="avatar ${frame}" style="--s:${size}px"><b>${esc(initials(user?.nickname || '?'))}</b>${img}${art}</span>`;
 }
 
 export function charCard(c, { href = '', meta = '', flag = '', corner = '', tag = 'div', attrs = '', locked = false } = {}) {

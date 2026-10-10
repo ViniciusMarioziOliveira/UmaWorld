@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api", tags=["hub"])
 @router.get("/hub")
 def hub_view(user: m.User = Depends(current_user), db: Session = Depends(get_db)):
     banners = gacha.current_banners()
-    limited, duo = banners["limited"], banners["duo"]
+    limited, duo = banners["limited"], banners.get("duo")
     announcements = db.scalars(
         select(m.Announcement).order_by(m.Announcement.pinned.desc(), m.Announcement.id.desc()).limit(10)
     ).all()
@@ -29,27 +29,29 @@ def hub_view(user: m.User = Depends(current_user), db: Session = Depends(get_db)
         select(func.count()).select_from(m.Pull)
         .where(m.Pull.rarity == 5, m.Pull.created_at >= today_start_utc()).scalar_subquery(),
     )).one()
+    events = [{
+        "kind": "banner",
+        "icon": "dice",
+        "title": limited.name,
+        "description": limited.subtitle,
+        "character": char_public(limited.featured5[0]),
+        "ends_at": limited.ends_at,
+        "link": "gacha",
+    }]
+    if duo:  # só no período dela; o telão da pista e as Umas do banner também dependem disto
+        events.append({
+            "kind": "banner",
+            "icon": "sparkle",
+            "title": duo.name,
+            "description": duo.subtitle,
+            "character": char_public(duo.featured5[0]),
+            "characters": [char_public(c) for c in duo.featured5],
+            "ends_at": duo.ends_at,
+            "link": "gacha/duo",
+        })
     return {
         "events": [
-            {
-                "kind": "banner",
-                "icon": "dice",
-                "title": limited.name,
-                "description": limited.subtitle,
-                "character": char_public(limited.featured5[0]),
-                "ends_at": limited.ends_at,
-                "link": "gacha",
-            },
-            {
-                "kind": "banner",
-                "icon": "sparkle",
-                "title": duo.name,
-                "description": duo.subtitle,
-                "character": char_public(duo.featured5[0]),
-                "characters": [char_public(c) for c in duo.featured5],
-                "ends_at": duo.ends_at,
-                "link": "gacha/duo",
-            },
+            *events,
             {"kind": "reset", "icon": "sunrise", "title": "Reset das missões diárias",
              "description": "Missões diárias e limites diários da Loja renovam.",
              "ends_at": iso(next_daily_reset()), "link": "missoes"},

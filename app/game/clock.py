@@ -26,6 +26,16 @@ def _to_utc_naive(local_dt: datetime) -> datetime:
     return local_dt.astimezone(timezone.utc).replace(tzinfo=None)
 
 
+def day_start_utc(day: date) -> datetime:
+    """Meia-noite de um dia no fuso do jogo, em UTC (como no banco)."""
+    return _to_utc_naive(datetime.combine(day, time.min, tzinfo=TZ))
+
+
+def is_weekend(at: datetime) -> bool:
+    """Se um instante (UTC, como no banco) cai no sábado ou no domingo do fuso do jogo."""
+    return at.replace(tzinfo=timezone.utc).astimezone(TZ).weekday() >= 5
+
+
 def day_key() -> str:
     return local_now().date().isoformat()
 

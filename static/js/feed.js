@@ -4,8 +4,8 @@ import { live, subscribe } from './realtime.js';
 import { avatar, esc, formatFeed, icon, timeAgo } from './ui.js';
 
 const KIND_TONE = {
-  five_star: 'gold', milestone: 'sky', rank_up: 'green', ascension: 'purple', awakening: 'purple',
-  achievement: 'pink', shop_character: 'pink', new_player: 'ink', farm: 'gold',
+  six_star: 'teal', five_star: 'gold', exchange: 'pink', milestone: 'sky', rank_up: 'green', ascension: 'purple',
+  awakening: 'purple', achievement: 'pink', shop_character: 'pink', new_player: 'ink', farm: 'gold',
 };
 
 function itemHtml(ev, fresh, linkProfiles) {

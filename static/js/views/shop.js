@@ -2,7 +2,7 @@
 
 import { api, onState, state } from '../store.js';
 import {
-  act, bindSteppers, countdown, esc, fmt, icon, money, portrait, stars, stepper, toast, viewHead,
+  act, avatar, bindSteppers, countdown, esc, fmt, icon, money, portrait, stars, stepper, toast, viewHead,
 } from '../ui.js';
 
 const LIMIT_LABEL = { daily: 'hoje', weekly: 'nesta semana', once: 'compra única' };
@@ -25,7 +25,8 @@ export async function render(el, params, ctx) {
       : 'Sem limite';
     return `
       <article class="offer r${o.rarity} ${soldOut ? 'soldout' : ''}">
-        <div class="o-art">${o.character ? portrait(o.character, 84) : icon(o.icon)}</div>
+        <div class="o-art ${o.frame ? 'o-frame' : ''}">${o.character ? portrait(o.character, 84)
+          : o.frame ? avatar({ ...state.me, frame: { data: { css: o.frame } } }, 84) : icon(o.icon)}</div>
         <div class="row-between">${stars(o.rarity)}<span class="chip">${esc(limit)}</span></div>
         <h4>${esc(o.name)}</h4>
         <p class="o-desc">${o.character
