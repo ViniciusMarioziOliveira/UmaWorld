@@ -111,7 +111,7 @@ Fora da cerca fica a **Pista de Corrida**, com grama, areia, arquibancada, port�
   </tr>
 </table>
 
-- **Visitante rara:** a **Mejiro Ramonu**, a única 6★, não sai em nenhum banner. Cada hora de produção da Fazenda é uma chance de 0,5% de ela aparecer na colheita, e de 1% nas horas de sábado e domingo. Quando ela vem, uma flor acende seis estrelas e desabrocha numa chuva de pétalas.
+- **Visitante rara:** a **Mejiro Ramonu**, a única 6★, não sai em nenhum banner. Cada hora de produção da Fazenda é uma chance de 0,5% de ela aparecer na colheita, e de 1% nas horas de sábado e domingo. Quando ela vem, um botão de flor acende seis estrelas, uma por segundo. A sexta dá um segundo choque, mais forte, e a flor desabrocha pétala por pétala, numa chuva de pétalas.
 
 Também tem **Missões** diárias, semanais e conquistas, uma **Loja** com limites por período e cosméticos, o **Armazém** com tudo o que você tem e o **Hall da Fama**, com rankings por nível, poder, pulls, coleção e 5★. Ao todo são **37 Umas** para colecionar.
 

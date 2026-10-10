@@ -139,12 +139,16 @@ export class Sky {
   /** 0 = deriva calma; 1 = estrelas já esticando. */
   charge(level) { this.level = level; }
 
+  /** Com a tela coberta por um fundo opaco, o campo de estrelas para de ser desenhado (as partículas continuam). */
+  cover(on) { this.covered = on; }
+
   warp(seconds, power) {
     this.warpUntil = this.time + seconds;
     this.warpPower = power;
   }
 
-  burst(x, y, { palette = [WHITE], n = 24, speed = 320, size = 2.2, life = 0.9, gravity = 160, sparkles = 0.3, petals = 0 } = {}) {
+  /** `fadeIn`: segundos para a partícula surgir (0 = já nasce acesa, como numa explosão). */
+  burst(x, y, { palette = [WHITE], n = 24, speed = 320, size = 2.2, life = 0.9, gravity = 160, sparkles = 0.3, petals = 0, fadeIn = 0 } = {}) {
     const total = this.reduce ? Math.ceil(n / 4) : n;
     for (let i = 0; i < total; i += 1) {
       const a = rand(0, Math.PI * 2);
@@ -153,7 +157,17 @@ export class Sky {
       const isPetal = Math.random() < petals;
       this.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: gravity, life: l, max: l,
         size: size * rand(0.6, 1.4), color: pick(palette), petal: isPetal, star: !isPetal && Math.random() < sparkles,
-        rot: rand(0, 6.3), spin: rand(-3, 3), sway: rand(0, 6.3) });
+        rot: rand(0, 6.3), spin: rand(-3, 3), sway: rand(0, 6.3), fadeIn });
+    }
+  }
+
+  /** Um fio de luz de um ponto a outro, numa leve curva: as partículas saem juntas e a mais rápida vai na frente. */
+  stream(x0, y0, x1, y1, { palette = [WHITE], n = 12, life = 0.36, size = 2, bend = 0.16 } = {}) {
+    if (this.reduce) return;
+    for (let i = 0; i < n; i += 1) {
+      const l = life * (0.6 + (0.4 * i) / n);
+      this.parts.push({ pull: true, out: true, sx: x0, sy: y0, tx: x1, ty: y1, bx: (y0 - y1) * bend, by: (x1 - x0) * bend,
+        x: x0, y: y0, life: l, max: l, size: size * (1.2 - (0.5 * i) / n), color: pick(palette), star: false });
     }
   }
 
@@ -183,7 +197,7 @@ export class Sky {
     const k = 1 - Math.exp(-dt * 4);
     for (let i = 0; i < 3; i += 1) this.tint[i] += (this.tintTo[i] - this.tint[i]) * k;
     this.rainbow += (this.rainbowTo - this.rainbow) * k;
-    this.drawStars(dt);
+    if (!this.covered) this.drawStars(dt);
     this.drawFx(dt);
     this.raf = requestAnimationFrame(this.frame);
   }
@@ -267,11 +281,21 @@ export class Sky {
       let size;
       if (p.pull) {
         const t = 1 - k;
-        const e = t * t * t; // acelera ao chegar
-        p.x = p.sx + (p.tx - p.sx) * e;
-        p.y = p.sy + (p.ty - p.sy) * e;
-        alpha = Math.min(1, t * 2.5);
-        size = p.size * (0.5 + t);
+        if (p.out) {
+          // Fio de luz: sai rápido, freia ao chegar e apaga no destino.
+          const e = 1 - (1 - t) ** 2;
+          const arc = Math.sin(Math.PI * e);
+          p.x = p.sx + (p.tx - p.sx) * e + p.bx * arc;
+          p.y = p.sy + (p.ty - p.sy) * e + p.by * arc;
+          alpha = Math.min(1, k * 4);
+          size = p.size;
+        } else {
+          const e = t * t * t; // acelera ao chegar
+          p.x = p.sx + (p.tx - p.sx) * e;
+          p.y = p.sy + (p.ty - p.sy) * e;
+          alpha = Math.min(1, t * 2.5);
+          size = p.size * (0.5 + t);
+        }
       } else {
         const drag = Math.exp(-2.4 * dt);
         p.vx *= drag;
@@ -279,6 +303,7 @@ export class Sky {
         p.x += p.vx * dt;
         p.y += p.vy * dt;
         alpha = Math.min(1, k * 1.8);
+        if (p.fadeIn) alpha *= Math.min(1, (p.max - p.life) / p.fadeIn);
         size = p.size * (0.35 + 0.65 * k);
       }
       if (p.petal) {
